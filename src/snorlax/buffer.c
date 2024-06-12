@@ -7,6 +7,8 @@
  * @since       June 13, 2024
  */
 
+#include <stdlib.h>
+
 #include "buffer.h"
 
 extern buffer_t * buffer_gen(void) {
