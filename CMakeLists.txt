@@ -9,12 +9,14 @@ include_directories(src)
 
 set(SNORLAX_STD_SOURCE      src/snorlax.c
                             src/snorlax/random.c
+                            src/snorlax/buffer.c
                             src/snorlax/collection.c
                             src/snorlax/bucket.c
                             src/snorlax/list/linked/double.c
                             src/snorlax/list/linked/double/node.c)
 set(SNORLAX_STD_HEADER      src/snorlax.h
                             src/snorlax/random.h
+                            src/snorlax/buffer.h
                             src/snorlax/collection.h
                             src/snorlax/bucket.h
                             src/snorlax/list/linked/double.h)
@@ -30,4 +32,3 @@ target_link_libraries(snorlax-std-check snorlax-std)
 install(TARGETS snorlax-std ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src/ DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
                   FILES_MATCHING PATTERN "*.h")
-                  
