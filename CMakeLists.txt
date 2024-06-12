@@ -26,3 +26,8 @@ target_compile_options(snorlax-std PUBLIC "-ffile-prefix-map=${CMAKE_SOURCE_DIR}
 
 add_executable(snorlax-std-check src/main.c)
 target_link_libraries(snorlax-std-check snorlax-std)
+
+install(TARGETS snorlax-std ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src/ DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
+                  FILES_MATCHING PATTERN "*.h")
+                  
