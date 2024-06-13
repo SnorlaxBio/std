@@ -40,3 +40,19 @@ extern void buffer_reserve(buffer_t * o, uint64_t n) {
         o->capacity = n;
     }
 }
+
+extern void buffer_adjust(buffer_t * o) {
+    if(o->position > 0 || o->size > 0) {
+        if((o->size - o->position) <= o->position) {
+            // NO OVERLAPPING STRING
+            memcpy(o->mem, &o->mem[o->position], o->size - o->position);
+            o->size = o->size - o->position;
+            o->position = 0;
+        }
+    }
+
+    if(o->capacity - o->size > page) {
+        o->capacity = ((o->size + page) / page + 1) * page;
+        o->mem = (uint8_t *) realloc(o->mem, o->capacity);
+    }
+}
