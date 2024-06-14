@@ -32,10 +32,13 @@ extern buffer_t * buffer_rem(buffer_t * o);
 extern void buffer_write(buffer_t * o, uint8_t * data, uint64_t n);
 extern void buffer_reserve(buffer_t * o, uint64_t n);
 extern void buffer_adjust(buffer_t * o);
+extern void buffer_position_set(buffer_t * o, uint64_t n);
 
-#define buffer_front(o)     (o->mem ? &o->mem[o->position] : nil)
-#define buffer_back(o)      (o->mem ? &o->mem[o->size] : nil)
-#define buffer_len(o)       (o->size - o->position)
-#define buffer_remain(o)    (o->capacity - o->size)
+#define buffer_position_move(o, n)  (buffer_position_set(o, o->position + n))
+
+#define buffer_front(o)             (o->mem ? &o->mem[o->position] : nil)
+#define buffer_back(o)              (o->mem ? &o->mem[o->size] : nil)
+#define buffer_len(o)               (o->size - o->position)
+#define buffer_remain(o)            (o->capacity - o->size)
 
 #endif // __SNORLAX__BUFFER__H__
