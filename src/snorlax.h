@@ -24,4 +24,6 @@
 
 typedef void *                      object_t;
 
+extern void * object_rem(object_t * o);
+
 #endif // __SNORLAX__H__
