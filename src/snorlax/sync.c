@@ -12,5 +12,5 @@
 #include "sync/posix/mutex.h"
 
 extern sync_t * sync_gen(void) {
-    return (sync_t *) sync_mutex_posix_gen();
+    return (sync_t *) sync_posix_mutex_gen();
 }
