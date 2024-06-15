@@ -9,7 +9,7 @@
 
 #include "../snorlax.h"
 
-#include "sync/mutex/posix.h"
+#include "sync/posix/mutex.h"
 
 extern sync_t * sync_gen(void) {
     return (sync_t *) sync_mutex_posix_gen();

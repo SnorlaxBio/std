@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "posix.h"
+#include "mutex.h"
 
 static sync_posix_t * sync_posix_func_rem(sync_posix_t * sync);
 static int32_t sync_posix_func_lock(sync_posix_t * sync);
