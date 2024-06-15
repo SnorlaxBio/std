@@ -77,12 +77,12 @@ struct object_func {
     object_t * (*rem)(object_t *);
 };
 
-#define object_rem(o)                   (o->sync ? o->sync->func->rem(o) : nil)
+#define object_rem(o)                   (((object_t *) o)->sync ? ((object_t *) o)->sync->func->rem(((object_t *) o)) : nil)
 
-#define object_lock(o)                  (o->sync ? o->sync->func->lock(o) : success)
-#define object_unlock(o)                (o->sync ? o->sync->func->unlock(o) : success)
-#define object_wait(o, second, nano)    (o->sync ? o->sync->func->wait(o, second, nano) : success)
-#define object_wakeup(o, all)           (o->sync ? o->sync->func->wakeup(o, all) : success)
+#define object_lock(o)                  (((object_t *) o)->sync ? ((object_t *) o)->sync->func->lock(((object_t *) o)) : success)
+#define object_unlock(o)                (((object_t *) o)->sync ? ((object_t *) o)->sync->func->unlock(((object_t *) o)) : success)
+#define object_wait(o, second, nano)    (((object_t *) o)->sync ? ((object_t *) o)->sync->func->wait(((object_t *) o), second, nano) : success)
+#define object_wakeup(o, all)           (((object_t *) o)->sync ? ((object_t *) o)->sync->func->wakeup(((object_t *) o), all) : success)
 
 union variable;
 
