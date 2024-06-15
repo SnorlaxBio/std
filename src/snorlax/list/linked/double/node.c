@@ -4,20 +4,20 @@
  * @details
  * 
  * @author      snorlax <ceo@snorlax.bio>
- * @since       June 12, 2024
+ * @since       June 16, 2024
  */
 
 #include <stdlib.h>
 
-#include "../double.h"
+#include "../../../list.h"
 
-static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node, bucket_get_t get);
+static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node, variable_get_t get);
 
 static list_linked_double_node_func_t func = {
     list_linked_double_node_func_rem
 };
 
-extern list_linked_double_node_t * list_linked_double_node_gen(list_linked_double_t * collection, bucket_t o) {
+extern list_linked_double_node_t * list_linked_double_node_gen(list_linked_double_t * collection, variable_t o) {
     list_linked_double_node_t * node = (list_linked_double_node_t *) calloc(1, sizeof(list_linked_double_node_t));
 
     node->collection = collection;
@@ -27,7 +27,7 @@ extern list_linked_double_node_t * list_linked_double_node_gen(list_linked_doubl
     return node;
 }
 
-static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node, bucket_get_t get) {
+static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node, variable_get_t get) {
     if(node->collection) {
         list_linked_double_node_t * prev = node->prev;
         list_linked_double_node_t * next = node->next;

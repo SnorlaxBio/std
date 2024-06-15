@@ -11,7 +11,6 @@
 #define   __SNORLAX__COLLECTION__H__
 
 #include <snorlax.h>
-#include <snorlax/bucket.h>
 
 struct collection;
 struct collection_func;
@@ -25,27 +24,29 @@ typedef struct collection_node_func collection_node_func_t;
 
 struct collection {
     collection_func_t * func;
+    sync_t *            sync;
     uint64_t            size;
 };
 
 struct collection_func {
-    collection_t * (*rem)(collection_t *, bucket_get_t);
-    collection_node_t * (*add)(collection_t *, bucket_t);
-    collection_node_t * (*del)(collection_t *, bucket_t);
-    void (*clear)(collection_t *, bucket_get_t);
+    collection_t * (*rem)(collection_t *, variable_get_t);
+    collection_node_t * (*add)(collection_t *, variable_t);
+    collection_node_t * (*del)(collection_t *, variable_t);
+    void (*clear)(collection_t *, variable_get_t);
     collection_node_t * (*begin)(collection_t *);
     collection_node_t * (*end)(collection_t *);
-    collection_node_t * (*find)(collection_t *, bucket_t);
+    collection_node_t * (*find)(collection_t *, variable_get_t);
     uint64_t (*size)(collection_t *);
 };
 
 struct collection_node {
     collection_node_func_t *    func;
+    sync_t *                    sync;
     collection_t *              collection;
 };
 
 struct collection_node_func {
-    collection_node_t * (*rem)(collection_node_t *, bucket_get_t);
+    collection_node_t * (*rem)(collection_node_t *, variable_get_t);
 };
 
 #define collection_rem(collection, get)         (collection->func->rem(collection, get))

@@ -1,7 +1,7 @@
 /**
  * @file        snorlax/thread.h
  * @brief
- * @details
+ * @details     스레드의 경우 동기화가 필요하다.
  * 
  * @author      snorlax <ceo@snorlax.bio>
  * @since       June 15, 2024

@@ -4,22 +4,22 @@
  * @details
  * 
  * @author      snorlax <ceo@snorlax.bio>
- * @since       June 12, 2024
+ * @since       June 16, 2024
  */
 
 #include <stdlib.h>
 
-#include "double.h"
+#include "../../list.h"
 
-static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection, bucket_get_t get);
-static list_linked_double_node_t * list_linked_double_func_add(list_linked_double_t * collection, bucket_t o);
-static list_linked_double_node_t * list_linked_double_func_del(list_linked_double_t * collection, bucket_t o);
-static void list_linked_double_func_clear(list_linked_double_t * collection, bucket_get_t get);
+static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection, variable_get_t get);
+static list_linked_double_node_t * list_linked_double_func_add(list_linked_double_t * collection, variable_t o);
+static list_linked_double_node_t * list_linked_double_func_del(list_linked_double_t * collection, variable_t o);
+static void list_linked_double_func_clear(list_linked_double_t * collection, variable_get_t get);
 static list_linked_double_node_t * list_linked_double_func_begin(list_linked_double_t * collection);
 static list_linked_double_node_t * list_linked_double_func_end(list_linked_double_t * collection);
-static list_linked_double_node_t * list_linked_double_func_find(list_linked_double_t * collection, bucket_t o);
+static list_linked_double_node_t * list_linked_double_func_find(list_linked_double_t * collection, variable_t o);
 static uint64_t list_linked_double_func_size(list_linked_double_t * collection);
-static list_linked_double_node_t * list_linked_double_func_push(list_linked_double_t * collection, bucket_t o);
+static list_linked_double_node_t * list_linked_double_func_push(list_linked_double_t * collection, variable_t o);
 static list_linked_double_node_t * list_linked_double_func_pop(list_linked_double_t * collection);
 
 static list_linked_double_func_t func = {
@@ -43,7 +43,7 @@ extern list_linked_double_t * list_linked_double_gen(void) {
     return collection;
 }
 
-static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection, bucket_get_t get) {
+static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection, variable_get_t get) {
     list_linked_double_node_t * node = collection->head;
     while(node) {
         collection->head = collection->head->next;
@@ -55,7 +55,7 @@ static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t *
     return nil;
 }
 
-static list_linked_double_node_t * list_linked_double_func_add(list_linked_double_t * collection, bucket_t o) {
+static list_linked_double_node_t * list_linked_double_func_add(list_linked_double_t * collection, variable_t o) {
     list_linked_double_node_t * node = (list_linked_double_node_t *) list_linked_double_node_gen(collection, o);
 
     if(collection->tail) {
@@ -71,7 +71,7 @@ static list_linked_double_node_t * list_linked_double_func_add(list_linked_doubl
     return node;
 }
 
-static list_linked_double_node_t * list_linked_double_func_del(list_linked_double_t * collection, bucket_t o) {
+static list_linked_double_node_t * list_linked_double_func_del(list_linked_double_t * collection, variable_t o) {
     list_linked_double_node_t * node = list_linked_double_func_find(collection , o);
 
     if(node) {
@@ -100,7 +100,7 @@ static list_linked_double_node_t * list_linked_double_func_del(list_linked_doubl
     return node;
 }
 
-static void list_linked_double_func_clear(list_linked_double_t * collection, bucket_get_t get) {
+static void list_linked_double_func_clear(list_linked_double_t * collection, variable_get_t get) {
     list_linked_double_node_t * node = collection->head;
     while(node) {
         collection->head = collection->head->next;
@@ -120,7 +120,7 @@ static list_linked_double_node_t * list_linked_double_func_end(list_linked_doubl
     return nil;
 }
 
-static list_linked_double_node_t * list_linked_double_func_find(list_linked_double_t * collection, bucket_t o) {
+static list_linked_double_node_t * list_linked_double_func_find(list_linked_double_t * collection, variable_t o) {
     list_linked_double_node_t * node = collection->head;
     for(; node != nil; node = node->next) {
         if(node->o.u64 == o.u64) {
@@ -134,7 +134,7 @@ static uint64_t list_linked_double_func_size(list_linked_double_t * collection) 
     return collection->size;
 }
 
-static list_linked_double_node_t * list_linked_double_func_push(list_linked_double_t * collection, bucket_t o) {
+static list_linked_double_node_t * list_linked_double_func_push(list_linked_double_t * collection, variable_t o) {
     list_linked_double_node_t * node = list_linked_double_node_gen(collection, o);
 
     if(collection->tail) {

@@ -62,6 +62,16 @@ extern sync_t * sync_gen(void);
 #define sync_wait(sync, second, nano)   (sync->func->wait(sync, second, nano))
 #define sync_wakeup(sync, all)          (sync->func->wakeup(sync, all))
 
+#define sync_on(o) do {             \
+    if(o->sync == nil) {            \
+        o->sync = sync_gen();       \
+    }                               \
+} while(0)
+
+#define sync_off(o) do {            \
+    o->sync = sync_rem(o->sync);    \
+} while(0)
+
 struct object;
 struct object_func;
 
@@ -100,5 +110,7 @@ union variable {
     object_t o;
     memory_t p;
 };
+
+typedef void (*variable_get_t)(variable_t);
 
 #endif // __SNORLAX__H__

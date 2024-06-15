@@ -27,6 +27,7 @@ typedef struct buffer_pool_func buffer_pool_func_t;
 
 struct buffer {
     buffer_func_t * func;
+    sync_t *        sync;
 
     memory_t        mem;
     uint32_t        position;
