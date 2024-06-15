@@ -10,9 +10,12 @@
 #ifndef   __SNORLAX__RANDOM__H__
 #define   __SNORLAX__RANDOM__H__
 
-extern void snorlax_random_init(void);
-extern int snorlax_random_get(void);
+#include <snorlax.h>
 
-#define snorlax_random_int32(max)       (snorlax_random_get() % max)
+extern void snorlax_random_init(void);
+
+extern int32_t random_get(void);
+
+#define random_int32(max)       (random_get() % max)
 
 #endif // __SNORLAX__RANDOM__H__

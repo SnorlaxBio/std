@@ -10,8 +10,6 @@
 #include <time.h>
 #include <stdlib.h>
 
-#include <snorlax.h>
-
 #include "random.h"
 
 static uint32_t seed = invalid;
@@ -20,8 +18,6 @@ extern void snorlax_random_init(void) {
     seed = time(nil);
 }
 
-extern int snorlax_random_get(void) {
-    if(seed == invalid) snorlax_random_init();
-    
+extern int random_get(void) {
     return rand();
 }
