@@ -4,7 +4,7 @@
  * @details
  * 
  * @author      snorlax <ceo@snorlax.bio>
- * @since       June 12, 2024
+ * @since       June 15, 2024
  */
 
 #ifndef   __SNORLAX__RANDOM__H__
