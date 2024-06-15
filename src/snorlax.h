@@ -5,6 +5,8 @@
  * 
  * @author      snorlax <ceo@snorlax.bio>
  * @since       June 15, 2024
+ * 
+ * EXPOSE
  */
 
 #ifndef   __SNORLAX__H__
@@ -34,6 +36,32 @@ typedef void *                      memory_t;
 extern memory_t memory_gen(memory_t m, uint64_t n);
 extern memory_t memory_rem(memory_t m);
 
+struct sync;
+struct sync_func;
+
+typedef struct sync sync_t;
+typedef struct sync_func sync_func_t;
+
+struct sync {
+    sync_func_t * func;
+};
+
+struct sync_func {
+    sync_t * (*rem)(sync_t *);
+
+    int32_t (*lock)(sync_t *);
+    int32_t (*unlock)(sync_t *);
+    int32_t (*wait)(sync_t *, int64_t, int64_t);
+    int32_t (*wakeup)(sync_t *, int32_t);
+};
+
+extern sync_t * sync_gen(void);
+#define sync_rem(sync)                  (sync->func->rem(sync))
+#define sync_lock(sync)                 (sync->func->lock(sync))
+#define sync_unlock(sync)               (sync->func->unlock(sync))
+#define sync_wait(sync, second, nano)   (sync->func->wait(sync, second, nano))
+#define sync_wakeup(sync, all)          (sync->func->wakeup(sync, all))
+
 struct object;
 struct object_func;
 
@@ -42,13 +70,19 @@ typedef struct object_func object_func_t;
 
 struct object {
     object_func_t * func;
+    sync_t * sync;
 };
 
 struct object_func {
     object_t * (*rem)(object_t *);
 };
 
-#define object_rem(o)               (o->func->rem(o))
+#define object_rem(o)                   (o->sync ? o->sync->func->rem(o) : nil)
+
+#define object_lock(o)                  (o->sync ? o->sync->func->lock(o) : success)
+#define object_unlock(o)                (o->sync ? o->sync->func->unlock(o) : success)
+#define object_wait(o, second, nano)    (o->sync ? o->sync->func->wait(o, second, nano) : success)
+#define object_wakeup(o, all)           (o->sync ? o->sync->func->wakeup(o, all) : success)
 
 union variable;
 

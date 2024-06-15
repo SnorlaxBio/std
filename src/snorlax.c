@@ -8,3 +8,9 @@
  */
 
 #include "snorlax.h"
+
+extern sync_t * sync_gen(void) {
+    sync_t * sync = sync_posix_gen();
+
+    return sync;
+}
