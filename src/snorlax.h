@@ -4,7 +4,7 @@
  * @details
  * 
  * @author      snorlax <ceo@snorlax.bio>
- * @since       June 11, 2024
+ * @since       June 15, 2024
  */
 
 #ifndef   __SNORLAX__H__
@@ -12,8 +12,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
-extern void snorlax(void);
 
 #define success                     0
 #define fail                        (-1)
@@ -68,19 +66,5 @@ union variable {
     object_t o;
     memory_t p;
 };
-
-// 버켓과 같은 역할을 하는... 
-// var
-// variable_t
-// struct buffer;
-// typedef struct buffer buffer_t;
-// extern buffer_t * buffer_gen(buffer_pool_t * pool);
-// #define buffer_rem(buffer)      (buffer->func->rem(buffer))
-// struct buffer_pool;
-// typedef struct buffer_pool buffer_pool_t;
-// extern buffer_pool_t * buffer_pool_gen(uint32_t size, uint32_t page);
-// extern buffer_pool_t * buffer_pool_rem(buffer_pool_t * pool);
-// extern buffer_t * buffer_pool_get(buffer_pool_t * pool);
-// extern buffer_t * buffer_pool_rel(buffer_pool_t * pool, buffer_t * buffer);
 
 #endif // __SNORLAX__H__
