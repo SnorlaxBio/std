@@ -11,20 +11,23 @@ set(SNORLAX_STD_SOURCE      src/snorlax.c
                             src/snorlax/sync.c
                             src/snorlax/random.c
                             src/snorlax/memory.c
+                            src/snorlax/collection.c
                             src/snorlax/buffer.c
                             src/snorlax/thread/posix.c
                             src/snorlax/sync/posix/mutex.c
-                            src/snorlax/collection.c
                             src/snorlax/list/linked/double.c
-                            src/snorlax/list/linked/double/node.c)
+                            src/snorlax/list/linked/double/node.c
+                            src/snorlax/buffer/pool.c)
+
 set(SNORLAX_STD_HEADER      src/snorlax.h
                             src/snorlax/thread.h
                             src/snorlax/random.h
                             src/snorlax/list.h
+                            src/snorlax/collection.h
                             src/snorlax/buffer.h
                             src/snorlax/thread/posix.h
                             src/snorlax/sync/posix/mutex.h
-                            src/snorlax/collection.h)
+                            src/snorlax/buffer/pool.h)
 
 add_library(snorlax-std ${SNORLAX_STD_SOURCE}
                         ${SNORLAX_STD_HEADER})

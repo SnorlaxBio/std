@@ -87,12 +87,13 @@ struct object_func {
     object_t * (*rem)(object_t *);
 };
 
-#define object_rem(o)                   (((object_t *) o)->sync ? ((object_t *) o)->sync->func->rem(((object_t *) o)) : nil)
+#define object_rem(o)                   (o->func->rem(o))
 
-#define object_lock(o)                  (((object_t *) o)->sync ? ((object_t *) o)->sync->func->lock(((object_t *) o)) : success)
-#define object_unlock(o)                (((object_t *) o)->sync ? ((object_t *) o)->sync->func->unlock(((object_t *) o)) : success)
-#define object_wait(o, second, nano)    (((object_t *) o)->sync ? ((object_t *) o)->sync->func->wait(((object_t *) o), second, nano) : success)
-#define object_wakeup(o, all)           (((object_t *) o)->sync ? ((object_t *) o)->sync->func->wakeup(((object_t *) o), all) : success)
+#define object_lock(o)                  (((object_t *) o)->sync ? ((object_t *) o)->sync->func->lock(((object_t *) o)->sync) : success)
+#define object_unlock(o)                (((object_t *) o)->sync ? ((object_t *) o)->sync->func->unlock(((object_t *) o)->sync) : success)
+
+#define object_wait(o, second, nano)    (((object_t *) o)->sync ? ((object_t *) o)->sync->func->wait(((object_t *) o)->sync, second, nano) : success)
+#define object_wakeup(o, all)           (((object_t *) o)->sync ? ((object_t *) o)->sync->func->wakeup(((object_t *) o)->sync, all) : success)
 
 union variable;
 
@@ -112,5 +113,7 @@ union variable {
 };
 
 typedef void (*variable_get_t)(variable_t);
+
+#define variable_int32(v)       ((variable_t) { .i32 = v })
 
 #endif // __SNORLAX__H__

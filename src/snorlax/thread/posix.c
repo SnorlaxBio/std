@@ -8,6 +8,7 @@
  */
 
 #include <signal.h>
+#include <stdlib.h>
 
 #include "posix.h"
 
@@ -57,7 +58,7 @@ static int32_t thread_posix_func_on(thread_posix_t * o) {
         int err = pthread_create(&o->handle, nil, posix_start_routine, o);
         if(err) {
             // TODO: ERROR HANDLING
-            o->handle = nil;
+            o->handle = 0;
             ret = fail;
         }
     }

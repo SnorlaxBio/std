@@ -16,8 +16,8 @@
 static uint32_t page = 8;
 
 static buffer_t * buffer_func_rem(buffer_t * buffer);
-static memory_t buffer_func_front(buffer_t * buffer);
-static memory_t buffer_func_back(buffer_t * buffer);
+static uint8_t * buffer_func_front(buffer_t * buffer);
+static uint8_t * buffer_func_back(buffer_t * buffer);
 
 static uint32_t buffer_func_position_get(buffer_t * buffer);
 static void buffer_func_position_set(buffer_t * buffer, uint32_t v);
@@ -68,8 +68,8 @@ static buffer_t * buffer_func_rem(buffer_t * buffer) {
     return nil;
 }
 
-static memory_t buffer_func_front(buffer_t * buffer) {
-    memory_t mem = nil;
+static uint8_t * buffer_func_front(buffer_t * buffer) {
+    uint8_t * mem = nil;
 
     object_lock(buffer);
     
@@ -82,8 +82,8 @@ static memory_t buffer_func_front(buffer_t * buffer) {
     return mem;
 }
 
-static memory_t buffer_func_back(buffer_t * buffer) {
-    memory_t mem = nil;
+static uint8_t * buffer_func_back(buffer_t * buffer) {
+    uint8_t * mem = nil;
 
     object_lock(buffer);
 
@@ -131,11 +131,34 @@ static uint32_t buffer_func_size_get(buffer_t * buffer) {
 static void buffer_func_size_set(buffer_t * buffer, uint32_t v) {
     object_lock(buffer);
 
-    if(buffer->capacity <= v) {
+    if(v < buffer->position && buffer->capacity <= v) {
         // TODO: CHECK & ASSERTION
     }
 
     buffer->size = v;
+
+    object_unlock(buffer);
+}
+
+static uint32_t buffer_func_capacity_get(buffer_t * buffer) {
+    object_lock(buffer);
+
+    uint32_t n = buffer->capacity;
+
+    object_unlock(buffer);
+
+    return n;
+}
+
+static void buffer_func_capacity_set(buffer_t * buffer, uint32_t v) {
+    object_lock(buffer);
+
+    if(v < buffer->size) {
+        // TODO: ASSERTION
+    }
+
+    buffer->capacity = v;
+    buffer->mem = memory_gen(buffer->mem, buffer->capacity);
 
     object_unlock(buffer);
 }

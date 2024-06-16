@@ -29,7 +29,7 @@ struct buffer {
     buffer_func_t * func;
     sync_t *        sync;
 
-    memory_t        mem;
+    uint8_t *       mem;
     uint32_t        position;
     uint32_t        size;
     uint32_t        capacity;
@@ -38,8 +38,8 @@ struct buffer {
 struct buffer_func {
     buffer_t * (*rem)(buffer_t *);
 
-    memory_t (*front)(buffer_t *);
-    memory_t (*back)(buffer_t *);
+    uint8_t * (*front)(buffer_t *);
+    uint8_t * (*back)(buffer_t *);
 
     uint32_t (*position_get)(buffer_t *);
     void (*position_set)(buffer_t *, uint32_t);

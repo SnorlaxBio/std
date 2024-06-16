@@ -26,7 +26,7 @@ static sync_posix_mutex_func_t func = {
     sync_posix_mutex_func_wakeup
 };
 
-extern sync_posix_mutex_t * sync_posix_gen(void) {
+extern sync_posix_mutex_t * sync_posix_mutex_gen(void) {
     sync_posix_mutex_t * sync = (sync_posix_mutex_t *) calloc(1, sizeof(sync_posix_mutex_t));
 
     sync->func = &func;
@@ -36,7 +36,7 @@ extern sync_posix_mutex_t * sync_posix_gen(void) {
     return sync;
 }
 
-static sync_posix_mutex_t * sync_posix_func_rem(sync_posix_mutex_t * sync) {
+static sync_posix_mutex_t * sync_posix_mutex_func_rem(sync_posix_mutex_t * sync) {
     pthread_mutex_destroy(&sync->mutex);
     pthread_cond_destroy(&sync->cond);
 
@@ -44,14 +44,14 @@ static sync_posix_mutex_t * sync_posix_func_rem(sync_posix_mutex_t * sync) {
     return nil;
 }
 
-static int32_t sync_posix_func_lock(sync_posix_mutex_t * sync) {
+static int32_t sync_posix_mutex_func_lock(sync_posix_mutex_t * sync) {
     int32_t err = pthread_mutex_lock(&sync->mutex);
 
     // TODO: ERROR HANDLING
 
     return err == success ? success : fail;
 }
-static int32_t sync_posix_func_unlock(sync_posix_mutex_t * sync) {
+static int32_t sync_posix_mutex_func_unlock(sync_posix_mutex_t * sync) {
     int32_t err = pthread_mutex_unlock(&sync->mutex);
 
     // TODO: ERROR HANDLING
@@ -59,7 +59,7 @@ static int32_t sync_posix_func_unlock(sync_posix_mutex_t * sync) {
     return err == success ? success : fail;
 }
 
-static int32_t sync_posix_func_wait(sync_posix_mutex_t * sync, int64_t second, int64_t nano) {
+static int32_t sync_posix_mutex_func_wait(sync_posix_mutex_t * sync, int64_t second, int64_t nano) {
     if(second == 0 && nano == 0) {
         int err = pthread_cond_wait(&sync->cond, &sync->mutex);
 
@@ -83,7 +83,7 @@ static int32_t sync_posix_func_wait(sync_posix_mutex_t * sync, int64_t second, i
     }
 }
 
-static int32_t sync_posix_func_wakeup(sync_posix_mutex_t * sync, int32_t all){
+static int32_t sync_posix_mutex_func_wakeup(sync_posix_mutex_t * sync, int32_t all){
     if(all) {
         int err = pthread_cond_broadcast(&sync->cond);
         
