@@ -7,10 +7,150 @@
  * @since       June 13, 2024
  */
 
+#include <stdlib.h>
+
 #include "buffer.h"
 
 #include "buffer/pool.h"
 
-static buffer_func_t func = {
+static uint32_t page = 8;
 
+static buffer_t * buffer_func_rem(buffer_t * buffer);
+static memory_t buffer_func_front(buffer_t * buffer);
+static memory_t buffer_func_back(buffer_t * buffer);
+
+static uint32_t buffer_func_position_get(buffer_t * buffer);
+static void buffer_func_position_set(buffer_t * buffer, uint32_t v);
+
+static uint32_t buffer_func_size_get(buffer_t * buffer);
+static void buffer_func_size_set(buffer_t * buffer, uint32_t v);
+
+static uint32_t buffer_func_capacity_get(buffer_t * buffer);
+static void buffer_func_capacity_set(buffer_t * buffer, uint32_t v);
+
+static void buffer_func_reset(buffer_t * buffer, uint32_t capacity);
+
+static buffer_func_t func = {
+    buffer_func_rem,
+    buffer_func_front,
+    buffer_func_back,
+
+    buffer_func_position_get,
+    buffer_func_position_set,
+    buffer_func_size_get,
+    buffer_func_size_set,
+    buffer_func_capacity_get,
+    buffer_func_capacity_set,
+
+    buffer_func_reset
 };
+
+extern buffer_t * buffer_gen(uint32_t capacity) {
+    buffer_t * buffer = (buffer_t *) calloc(1, sizeof(buffer_t));
+
+    buffer->func = &func;
+    buffer->capacity = capacity;
+    
+    if(buffer->capacity > 0) {
+        buffer->mem = malloc(buffer->capacity);
+    }
+
+    return buffer;
+}
+
+static buffer_t * buffer_func_rem(buffer_t * buffer) {
+    object_lock(buffer);
+    buffer->mem = memory_rem(buffer->mem);
+    object_unlock(buffer);
+
+    buffer->sync = sync_rem(buffer->sync);
+
+    return nil;
+}
+
+static memory_t buffer_func_front(buffer_t * buffer) {
+    memory_t mem = nil;
+
+    object_lock(buffer);
+    
+    if(buffer->mem && (buffer->position < buffer->size)) {
+        mem = &buffer->mem[buffer->position];
+    }
+
+    object_unlock(buffer);
+
+    return mem;
+}
+
+static memory_t buffer_func_back(buffer_t * buffer) {
+    memory_t mem = nil;
+
+    object_lock(buffer);
+
+    if(buffer->mem && (buffer->size < buffer->capacity)) {
+        mem = &buffer->mem[buffer->position];
+    }
+
+    object_unlock(buffer);
+
+    return mem;
+}
+
+static uint32_t buffer_func_position_get(buffer_t * buffer) {
+    object_lock(buffer);
+
+    uint32_t n = buffer->position;
+
+    object_unlock(buffer);
+
+    return n;
+}
+
+static void buffer_func_position_set(buffer_t * buffer, uint32_t v) {
+    object_lock(buffer);
+
+    if(buffer->size <= v) {
+        // TODO: CHECK & ASSERTION
+    }
+
+    buffer->position = v;
+
+    object_unlock(buffer);
+}
+
+static uint32_t buffer_func_size_get(buffer_t * buffer) {
+    object_lock(buffer);
+
+    uint32_t n = buffer->size;
+
+    object_unlock(buffer);
+
+    return n;
+}
+
+static void buffer_func_size_set(buffer_t * buffer, uint32_t v) {
+    object_lock(buffer);
+
+    if(buffer->capacity <= v) {
+        // TODO: CHECK & ASSERTION
+    }
+
+    buffer->size = v;
+
+    object_unlock(buffer);
+}
+
+static void buffer_func_reset(buffer_t * buffer, uint32_t capacity) {
+    object_lock(buffer);
+
+    if(capacity == invalid) capacity = page;
+
+    buffer->capacity = capacity;
+
+    buffer->mem = memory_gen(buffer->mem, buffer->capacity);
+
+    buffer->position = 0;
+    buffer->size = 0;
+
+    object_unlock(buffer);
+}

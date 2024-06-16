@@ -56,11 +56,11 @@ struct sync_func {
 };
 
 extern sync_t * sync_gen(void);
-#define sync_rem(sync)                  (sync->func->rem(sync))
-#define sync_lock(sync)                 (sync->func->lock(sync))
-#define sync_unlock(sync)               (sync->func->unlock(sync))
-#define sync_wait(sync, second, nano)   (sync->func->wait(sync, second, nano))
-#define sync_wakeup(sync, all)          (sync->func->wakeup(sync, all))
+#define sync_rem(sync)                  (sync ? sync->func->rem(sync) : nil)
+#define sync_lock(sync)                 (sync ? sync->func->lock(sync) : success)
+#define sync_unlock(sync)               (sync ? sync->func->unlock(sync) : success)
+#define sync_wait(sync, second, nano)   (sync ? sync->func->wait(sync, second, nano) : success)
+#define sync_wakeup(sync, all)          (sync ? sync->func->wakeup(sync, all) : success)
 
 #define sync_on(o) do {             \
     if(o->sync == nil) {            \

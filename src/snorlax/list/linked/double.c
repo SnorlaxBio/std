@@ -44,6 +44,8 @@ extern list_linked_double_t * list_linked_double_gen(void) {
 }
 
 static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection, variable_get_t get) {
+    object_lock(collection);
+
     list_linked_double_node_t * node = collection->head;
     while(node) {
         collection->head = collection->head->next;
@@ -51,11 +53,17 @@ static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t *
         node = collection->head;
     }
 
+    object_unlock(collection);
+
+    collection->sync = sync_rem(collection->sync);
+
     free(collection);
     return nil;
 }
 
 static list_linked_double_node_t * list_linked_double_func_add(list_linked_double_t * collection, variable_t o) {
+    object_lock(collection);
+
     list_linked_double_node_t * node = (list_linked_double_node_t *) list_linked_double_node_gen(collection, o);
 
     if(collection->tail) {
@@ -68,10 +76,14 @@ static list_linked_double_node_t * list_linked_double_func_add(list_linked_doubl
     collection->tail = node;
     collection->size = collection->size + 1;
 
+    object_unlock(collection);
+
     return node;
 }
 
 static list_linked_double_node_t * list_linked_double_func_del(list_linked_double_t * collection, variable_t o) {
+    object_lock(collection);
+
     list_linked_double_node_t * node = list_linked_double_func_find(collection , o);
 
     if(node) {
@@ -97,10 +109,14 @@ static list_linked_double_node_t * list_linked_double_func_del(list_linked_doubl
         collection->size = collection->size - 1;
     }
 
+    object_unlock(collection);
+
     return node;
 }
 
 static void list_linked_double_func_clear(list_linked_double_t * collection, variable_get_t get) {
+    object_lock(collection);
+
     list_linked_double_node_t * node = collection->head;
     while(node) {
         collection->head = collection->head->next;
@@ -110,10 +126,15 @@ static void list_linked_double_func_clear(list_linked_double_t * collection, var
     collection->head = nil;
     collection->tail = nil;
     collection->size = 0lu;
+
+    object_unlock(collection);
 }
 
 static list_linked_double_node_t * list_linked_double_func_begin(list_linked_double_t * collection) {
-    return collection->head;
+    object_lock(collection);
+    list_linked_double_node_t * node = collection->head;
+    object_unlock(collection);
+    return node;
 }
 
 static list_linked_double_node_t * list_linked_double_func_end(list_linked_double_t * collection) {

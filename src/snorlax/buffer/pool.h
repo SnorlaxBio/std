@@ -18,6 +18,7 @@ typedef struct buffer_pool_func buffer_pool_func_t;
 
 struct buffer_pool {
     buffer_pool_func_t * func;
+    sync_t * sync;
     uint32_t size;
     uint32_t page;
     buffer_t ** container;
