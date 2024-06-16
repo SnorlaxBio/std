@@ -131,10 +131,7 @@ static void list_linked_double_func_clear(list_linked_double_t * collection, var
 }
 
 static list_linked_double_node_t * list_linked_double_func_begin(list_linked_double_t * collection) {
-    object_lock(collection);
-    list_linked_double_node_t * node = collection->head;
-    object_unlock(collection);
-    return node;
+    return collection->head;
 }
 
 static list_linked_double_node_t * list_linked_double_func_end(list_linked_double_t * collection) {
@@ -142,12 +139,17 @@ static list_linked_double_node_t * list_linked_double_func_end(list_linked_doubl
 }
 
 static list_linked_double_node_t * list_linked_double_func_find(list_linked_double_t * collection, variable_t o) {
+    object_lock(collection);
+
     list_linked_double_node_t * node = collection->head;
     for(; node != nil; node = node->next) {
         if(node->o.u64 == o.u64) {
             break;
         }
     }
+
+    object_unlock(collection);
+
     return node;
 }
 
@@ -156,6 +158,8 @@ static uint64_t list_linked_double_func_size(list_linked_double_t * collection) 
 }
 
 static list_linked_double_node_t * list_linked_double_func_push(list_linked_double_t * collection, variable_t o) {
+    object_lock(collection);
+
     list_linked_double_node_t * node = list_linked_double_node_gen(collection, o);
 
     if(collection->tail) {
@@ -168,10 +172,14 @@ static list_linked_double_node_t * list_linked_double_func_push(list_linked_doub
     collection->tail = node;
     collection->size = collection->size + 1;
 
+    object_unlock(collection);
+
     return node;
 }
 
 static list_linked_double_node_t * list_linked_double_func_pop(list_linked_double_t * collection) {
+    object_lock(collection);
+
     list_linked_double_node_t * node = collection->head;
     if(node) {
         collection->head = node->next;
@@ -185,6 +193,8 @@ static list_linked_double_node_t * list_linked_double_func_pop(list_linked_doubl
         node->next = nil;
         node->collection = nil;
     }
+
+    object_unlock(collection);
 
     return node;
 }
