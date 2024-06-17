@@ -37,4 +37,6 @@ struct thread_func {
     int32_t (*alive)(thread_t *);
 };
 
+extern thread_t * thread_gen(thread_routine_t run);
+
 #endif // __SNORLAX__THREAD__H__
