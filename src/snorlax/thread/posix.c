@@ -12,7 +12,7 @@
 
 #include "posix.h"
 
-static thread_posix_t * thread_posix_func_rem(thread_posix_t * o);
+static thread_posix_t * thread_posix_func_rem(thread_posix_t * o, thread_posix_cancel_t cancel);
 static int32_t thread_posix_func_on(thread_posix_t * o);
 static int32_t thread_posix_func_off(thread_posix_t * o, thread_posix_cancel_t cancel);
 static int32_t thread_posix_func_alive(thread_posix_t * o);
@@ -39,8 +39,8 @@ extern thread_posix_t * thread_posix_gen(thread_posix_routine_t run) {
     return o;
 }
 
-static thread_posix_t * thread_posix_func_rem(thread_posix_t * o) {
-    thread_posix_func_off(o, thread_posix_func_cancel);
+static thread_posix_t * thread_posix_func_rem(thread_posix_t * o, thread_posix_cancel_t cancel) {
+    thread_posix_func_off(o, cancel ? cancel : thread_posix_func_cancel);
 
     o->sync = sync_rem(o->sync);
 
