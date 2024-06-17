@@ -26,7 +26,7 @@ struct thread {
     sync_t * sync;
 
     thread_cancel_t cancel;
-    
+
     thread_routine_t run;
 };
 
@@ -44,6 +44,6 @@ extern thread_t * thread_gen(thread_routine_t run);
 #define thread_on(thread)               (thread ? thread->func->on(thread) : fail)
 #define thread_off(thread, cancel)      (thread ? thread->func->off(thread, cancel) : success)
 #define thread_alive(thread)            (thread ? thread->func->alive(thread) : false)
-#define thread_cancel(thread, cancel)   (thread ? (thread->cancel = (cancel)) : (cancel))
+#define thread_cancel(thread, f)        (thread ? (thread->cancel = (f)) : (f))
 
 #endif // __SNORLAX__THREAD__H__
