@@ -24,6 +24,7 @@ typedef struct queue_node_func queue_node_func_t;
 
 struct queue {
     queue_func_t * func;
+
     sync_t * sync;
 
     uint64_t size;
@@ -35,14 +36,17 @@ struct queue_func {
     queue_t * (*rem)(queue_t *);
     queue_node_t * (*push)(queue_t *, queue_node_t *);
     queue_node_t * (*pop)(queue_t *);
+    queue_node_t * (*del)(queue_t *, queue_node_t *);
 };
 
-#define queue_rem(queue)        (queue ? queue->func->rem(queue) : nil)
-#define queue_push(queue, node) (queue ? queue->func->push(queue, node) : nil)
-#define queue_pop(queue)        (queue ? queue->func->pop(queue) : nil)
+#define queue_rem(queue)            (queue ? ((queue_t *) queue)->func->rem((queue_t *) queue) : nil)
+#define queue_push(queue, node)     (queue ? ((queue_t *) queue)->func->push((queue_t *) queue, (queue_node_t *) node) : nil)
+#define queue_pop(queue)            (queue ? ((queue_t *) queue)->func->pop((queue_t *) queue) : nil)
+#define queue_del(queue, node)      (queue ? ((queue_t *) queue)->func->del((queue_t *) queue, (queue_node_t *) node) : nil)
 
 extern queue_node_t * queue_func_push(queue_t * queue, queue_node_t * node);
 extern queue_node_t * queue_func_pop(queue_t * queue);
+extern queue_node_t * queue_func_del(queue_t * queue, queue_node_t * node);
 
 struct queue_node {
     queue_node_func_t * func;
