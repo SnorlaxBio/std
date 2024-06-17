@@ -39,6 +39,9 @@ struct thread_func {
 
 extern thread_t * thread_gen(thread_routine_t run);
 
-#define thread_rem(thread)      (thread ? thread->func->rem(thread) : nil)
+#define thread_rem(thread)          (thread ? thread->func->rem(thread) : nil)
+#define thread_on(thread)           (thread ? thread->func->on(thread) : fail)
+#define thread_off(thread, cancel)  (thread ? thread->func->off(thread, cancel) : success)
+#define thread_alive(thread)        (thread ? thread->func->alive(thread) : false)
 
 #endif // __SNORLAX__THREAD__H__
