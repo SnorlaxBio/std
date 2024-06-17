@@ -11,6 +11,7 @@ set(SNORLAX_STD_SOURCE      src/snorlax.c
                             src/snorlax/thread.c
                             src/snorlax/sync.c
                             src/snorlax/random.c
+                            src/snorlax/queue.c
                             src/snorlax/memory.c
                             src/snorlax/collection.c
                             src/snorlax/buffer.c
@@ -23,6 +24,7 @@ set(SNORLAX_STD_SOURCE      src/snorlax.c
 set(SNORLAX_STD_HEADER      src/snorlax.h
                             src/snorlax/thread.h
                             src/snorlax/random.h
+                            src/snorlax/queue.h
                             src/snorlax/list.h
                             src/snorlax/collection.h
                             src/snorlax/buffer.h
