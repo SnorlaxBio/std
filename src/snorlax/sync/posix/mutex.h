@@ -22,6 +22,7 @@ typedef struct sync_posix_mutex_func sync_posix_mutex_func_t;
 
 struct sync_posix_mutex {
     sync_posix_mutex_func_t * func;
+    
     pthread_mutex_t mutex;
     pthread_cond_t cond;
 };

@@ -11,10 +11,10 @@
 
 #include "../../list.h"
 
-static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection, variable_get_t get);
+static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection);
 static list_linked_double_node_t * list_linked_double_func_add(list_linked_double_t * collection, variable_t o);
 static list_linked_double_node_t * list_linked_double_func_del(list_linked_double_t * collection, variable_t o);
-static void list_linked_double_func_clear(list_linked_double_t * collection, variable_get_t get);
+static void list_linked_double_func_clear(list_linked_double_t * collection, variable_callback_t get);
 static list_linked_double_node_t * list_linked_double_func_begin(list_linked_double_t * collection);
 static list_linked_double_node_t * list_linked_double_func_end(list_linked_double_t * collection);
 static list_linked_double_node_t * list_linked_double_func_find(list_linked_double_t * collection, variable_t o);
@@ -43,13 +43,13 @@ extern list_linked_double_t * list_linked_double_gen(void) {
     return collection;
 }
 
-static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection, variable_get_t get) {
+static list_linked_double_t * list_linked_double_func_rem(list_linked_double_t * collection) {
     object_lock(collection);
 
     list_linked_double_node_t * node = collection->head;
     while(node) {
         collection->head = collection->head->next;
-        node = list_linked_double_node_rem(node, get);
+        node = list_linked_double_node_rem(node);
         node = collection->head;
     }
 
@@ -114,13 +114,14 @@ static list_linked_double_node_t * list_linked_double_func_del(list_linked_doubl
     return node;
 }
 
-static void list_linked_double_func_clear(list_linked_double_t * collection, variable_get_t get) {
+static void list_linked_double_func_clear(list_linked_double_t * collection, variable_callback_t callback) {
     object_lock(collection);
 
     list_linked_double_node_t * node = collection->head;
     while(node) {
         collection->head = collection->head->next;
-        node = list_linked_double_node_rem(node, get);
+        if(callback) callback(node->o);
+        node = list_linked_double_node_rem(node);
         node = collection->head;
     }
     collection->head = nil;

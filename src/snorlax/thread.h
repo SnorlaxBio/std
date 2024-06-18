@@ -18,7 +18,7 @@ struct thread_func;
 typedef struct thread thread_t;
 typedef struct thread_func thread_func_t;
 
-typedef int (*thread_routine_t)(thread_t *);
+typedef int32_t (*thread_routine_t)(thread_t *);
 typedef void (*thread_cancel_t)(thread_t *);
 
 struct thread {
@@ -31,7 +31,7 @@ struct thread {
 };
 
 struct thread_func {
-    thread_t * (*rem)(thread_t *, thread_cancel_t);
+    thread_t * (*rem)(thread_t *);
     
     int32_t (*on)(thread_t *);
     int32_t (*off)(thread_t *, thread_cancel_t);
@@ -40,10 +40,15 @@ struct thread_func {
 
 extern thread_t * thread_gen(thread_routine_t run);
 
-#define thread_rem(thread, cancel)      (thread ? thread->func->rem(thread, cancel) : nil)
-#define thread_on(thread)               (thread ? thread->func->on(thread) : fail)
-#define thread_off(thread, cancel)      (thread ? thread->func->off(thread, cancel) : success)
-#define thread_alive(thread)            (thread ? thread->func->alive(thread) : false)
-#define thread_cancel(thread, f)        (thread ? (thread->cancel = (f)) : (f))
+#define thread_rem(thread)              ((thread) ? (thread)->func->rem(thread) : nil)
+#define thread_on(thread)               ((thread) ? (thread)->func->on(thread) : fail)
+#define thread_off(thread, cancel)      ((thread) ? (thread)->func->off(thread, cancel) : success)
+#define thread_alive(thread)            ((thread) ? (thread)->func->alive(thread) : false)
+
+#define thread_cancel_set(thread, f) do {       \
+    if(thread) {                                \
+        (thread)->cancel = (f);                 \
+    }                                           \
+} while(0)
 
 #endif // __SNORLAX__THREAD__H__

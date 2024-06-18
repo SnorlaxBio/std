@@ -11,7 +11,7 @@
 
 #include "../../../list.h"
 
-static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node, variable_get_t get);
+static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node);
 
 static list_linked_double_node_func_t func = {
     list_linked_double_node_func_rem
@@ -27,7 +27,7 @@ extern list_linked_double_node_t * list_linked_double_node_gen(list_linked_doubl
     return node;
 }
 
-static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node, variable_get_t get) {
+static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node) {
     if(node->collection) {
         list_linked_double_node_t * prev = node->prev;
         list_linked_double_node_t * next = node->next;
@@ -49,7 +49,7 @@ static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_
         node->collection = nil;
     }
 
-    if(get) get(node->o);
     free(node);
+    
     return nil;
 }

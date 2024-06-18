@@ -34,7 +34,7 @@ struct thread_posix {
 };
 
 struct thread_posix_func {
-    thread_posix_t * (*rem)(thread_posix_t *, thread_posix_cancel_t);
+    thread_posix_t * (*rem)(thread_posix_t *);
     
     int32_t (*on)(thread_posix_t *);
     int32_t (*off)(thread_posix_t *, thread_posix_cancel_t);

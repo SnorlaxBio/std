@@ -31,10 +31,10 @@ struct list_linked_double {
 };
 
 struct list_linked_double_func {
-    list_linked_double_t * (*rem)(list_linked_double_t *, variable_get_t);
+    list_linked_double_t * (*rem)(list_linked_double_t *);
     list_linked_double_node_t * (*add)(list_linked_double_t *, variable_t);
     list_linked_double_node_t * (*del)(list_linked_double_t *, variable_t);
-    void (*clear)(list_linked_double_t *, variable_get_t);
+    void (*clear)(list_linked_double_t *, variable_callback_t);
     list_linked_double_node_t * (*begin)(list_linked_double_t *);
     list_linked_double_node_t * (*end)(list_linked_double_t *);
     list_linked_double_node_t * (*find)(list_linked_double_t *, variable_t);
@@ -54,12 +54,12 @@ struct list_linked_double_node {
 };
 
 struct list_linked_double_node_func {
-    list_linked_double_node_t * (*rem)(list_linked_double_node_t *, variable_get_t);
+    list_linked_double_node_t * (*rem)(list_linked_double_node_t *);
 };
 
 extern list_linked_double_t * list_linked_double_gen(void);
 
-#define list_linked_double_rem(collection, get)     (collection->func->rem(collection, get))
+#define list_linked_double_rem(collection)          (collection->func->rem(collection))
 #define list_linked_double_add(collection, o)       (collection->func->add(collection, o))
 #define list_linked_double_del(collection, o, get)  (collection->func->del(collection, o, get))
 #define list_linked_double_clear(collection, get)   (collection->func->clear(collection, get))
@@ -70,6 +70,6 @@ extern list_linked_double_t * list_linked_double_gen(void);
 
 extern list_linked_double_node_t * list_linked_double_node_gen(list_linked_double_t * collection, variable_t o);
 
-#define list_linked_double_node_rem(node, get)      (node->func->rem(node, get))
+#define list_linked_double_node_rem(node)           (node->func->rem(node))
 
 #endif // __SNORLAX__LIST__H__

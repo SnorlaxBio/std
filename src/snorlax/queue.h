@@ -34,19 +34,50 @@ struct queue {
 
 struct queue_func {
     queue_t * (*rem)(queue_t *);
+
+    queue_node_t * (*add)(queue_t *, variable_t);
+    queue_node_t * (*del)(queue_t *, variable_t);
+    void (*clear)(queue_t *, variable_callback_t);
+    queue_node_t * (*begin)(queue_t *);
+    queue_node_t * (*end)(queue_t *);
+    queue_node_t * (*find)(queue_t *, variable_t);
+    uint64_t (*size)(queue_t *);
+
+    queue_node_t * (*node)(variable_t);
+
     queue_node_t * (*push)(queue_t *, queue_node_t *);
     queue_node_t * (*pop)(queue_t *);
-    queue_node_t * (*del)(queue_t *, queue_node_t *);
 };
 
-#define queue_rem(queue)            (queue ? ((queue_t *) queue)->func->rem((queue_t *) queue) : nil)
-#define queue_push(queue, node)     (queue ? ((queue_t *) queue)->func->push((queue_t *) queue, (queue_node_t *) node) : nil)
-#define queue_pop(queue)            (queue ? ((queue_t *) queue)->func->pop((queue_t *) queue) : nil)
-#define queue_del(queue, node)      (queue ? ((queue_t *) queue)->func->del((queue_t *) queue, (queue_node_t *) node) : nil)
+#define queue_rem(queue)            ((queue) ? (queue)->func->rem(queue) : nil)
+#define queue_add(queue, v)         ((queue) ? (queue)->func->add(queue, v) : nil)
+#define queue_del(queue, v)         ((queue) ? (queue)->func->del(queue, v) : nil)
+#define queue_clear(queue, callback) do {       \
+    if(queue) {                                 \
+        (queue)->func->clear(queue, callback);  \
+    }                                           \
+} while(0)
+#define queue_begin(queue)          ((queue) ? (queue)->func->begin(queue) : nil)
+#define queue_end(queue)            ((queue) ? (queue)->func->end(queue) : nil)
+#define queue_find(queue, v)        ((queue) ? (queue)->func->find(queue, v) : nil)
+#define queue_size(queue)           ((queue) ? (queue)->func->size(queue) : 0LU)
+#define queue_node(queue, v)        ((queue) ? (queue)->func->node(v) : nil)
+#define queue_push(queue, node)     ((queue) ? (queue)->func->push(queue, node) : nil)
+#define queue_pop(queue)            ((queue) ? (queue)->func->pop(queue) : nil)
 
+extern queue_t * queue_gen(void);
+
+extern queue_t * queue_func_rem(queue_t * queue);
+extern queue_node_t * queue_func_add(queue_t * queue, variable_t v);
+extern queue_node_t * queue_func_del(queue_t * queue, variable_t v);
+extern void queue_func_clear(queue_t * queue, variable_callback_t callback);
+extern queue_node_t * queue_func_begin(queue_t * queue);
+extern queue_node_t * queue_func_end(queue_t * queue);
+extern queue_node_t * queue_func_find(queue_t * queue, variable_t v);
+extern uint64_t queue_func_size(queue_t * queue);
+extern queue_node_t * queue_func_node(variable_t v);
 extern queue_node_t * queue_func_push(queue_t * queue, queue_node_t * node);
 extern queue_node_t * queue_func_pop(queue_t * queue);
-extern queue_node_t * queue_func_del(queue_t * queue, queue_node_t * node);
 
 struct queue_node {
     queue_node_func_t * func;
@@ -55,12 +86,40 @@ struct queue_node {
     queue_t * queue;
     queue_node_t * prev;
     queue_node_t * next;
+
+    variable_t v;
 };
 
 struct queue_node_func {
     queue_node_t * (*rem)(queue_node_t *);
+
+    variable_t (*get)(queue_node_t *);
+    void (*set)(queue_node_t *, variable_t);
+
+    queue_node_t * (*del)(queue_node_t *, queue_t *);
+
+    queue_node_t * (*prev)(queue_node_t *);
+    queue_node_t * (*next)(queue_node_t *);
 };
 
-#define queue_node_rem(node)    (node ? node->func->rem(node) : nil)
+extern queue_node_t * queue_node_gen(variable_t v);
+
+#define queue_node_rem(node)            ((node) ? (node)->func->rem(node) : nil)
+#define queue_node_get(node)            ((node)->func->get(node))
+#define queue_node_set(node, v) do {        \
+    if(node) {                              \
+        (node)->func->set(node, v);         \
+    }                                       \
+} while(0)
+#define queue_node_del(node, queue)     ((node) ? (node)->func->del(node, queue) : nil)
+#define queue_node_prev(node)           ((node) ? (node)->func->prev(node) : nil)
+#define queue_node_next(node)           ((node) ? (node)->func->next(node) : nil)
+
+extern queue_node_t * queue_node_func_rem(queue_node_t * node);
+extern variable_t queue_node_func_get(queue_node_t * node);
+extern void queue_node_func_set(queue_node_t * node, variable_t v);
+extern queue_node_t * queue_node_func_del(queue_node_t * node, queue_t * queue);
+extern queue_node_t * queue_node_func_prev(queue_node_t * node);
+extern queue_node_t * queue_node_func_next(queue_node_t * node);
 
 #endif // __SNORLAX__QUEUE__H__
