@@ -30,6 +30,9 @@ static void buffer_func_capacity_set(buffer_t * buffer, uint32_t v);
 
 static void buffer_func_reset(buffer_t * buffer, uint32_t capacity);
 
+static uint32_t buffer_func_remain(buffer_t * buffer);
+static uint32_t buffer_func_length(buffer_t * buffer);
+
 static buffer_func_t func = {
     buffer_func_rem,
     buffer_func_front,
@@ -42,7 +45,9 @@ static buffer_func_t func = {
     buffer_func_capacity_get,
     buffer_func_capacity_set,
 
-    buffer_func_reset
+    buffer_func_reset,
+    buffer_func_remain,
+    buffer_func_length
 };
 
 extern buffer_t * buffer_gen(uint32_t capacity) {
@@ -176,4 +181,12 @@ static void buffer_func_reset(buffer_t * buffer, uint32_t capacity) {
     buffer->size = 0;
 
     object_unlock(buffer);
+}
+
+static uint32_t buffer_func_remain(buffer_t * buffer) {
+    return buffer->capacity - buffer->size;
+}
+
+static uint32_t buffer_func_length(buffer_t * buffer) {
+    return buffer->size - buffer->position;
 }
