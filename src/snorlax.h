@@ -141,5 +141,6 @@ union variable {
 typedef void (*variable_callback_t)(variable_t);
 
 #define variable_int32(v)       ((variable_t) { .i32 = v })
+#define variable_uint32(v)      ((variable_t) { .u32 = v })
 
 #endif // __SNORLAX__H__
