@@ -40,7 +40,7 @@ extern thread_posix_t * thread_posix_gen(thread_posix_routine_t run) {
 }
 
 static thread_posix_t * thread_posix_func_rem(thread_posix_t * o, thread_posix_cancel_t cancel) {
-    thread_posix_func_off(o, cancel ? cancel : thread_posix_func_cancel);
+    thread_posix_func_off(o, cancel);
 
     o->sync = sync_rem(o->sync);
 
@@ -72,7 +72,7 @@ static int32_t thread_posix_func_off(thread_posix_t * o, thread_posix_cancel_t c
     object_lock((object_t *) o);
 
     if(!pthread_equal(o->handle, 0)) {
-        o->cancel = thread_posix_func_cancel;
+        o->cancel = cancel ? cancel : thread_posix_func_cancel;
         void * result = nil;
         int err = pthread_join(o->handle, &result);
         if(err) {

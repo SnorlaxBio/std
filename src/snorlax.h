@@ -89,11 +89,11 @@ struct object_func {
 
 #define object_rem(o)                   (o->func->rem(o))
 
-#define object_lock(o)                  (((object_t *) o)->sync ? ((object_t *) o)->sync->func->lock(((object_t *) o)->sync) : success)
-#define object_unlock(o)                (((object_t *) o)->sync ? ((object_t *) o)->sync->func->unlock(((object_t *) o)->sync) : success)
+#define object_lock(o)                  (((o) && ((object_t *) o)->sync) ? ((object_t *) o)->sync->func->lock(((object_t *) o)->sync) : success)
+#define object_unlock(o)                (((o) && ((object_t *) o)->sync) ? ((object_t *) o)->sync->func->unlock(((object_t *) o)->sync) : success)
 
-#define object_wait(o, second, nano)    (((object_t *) o)->sync ? ((object_t *) o)->sync->func->wait(((object_t *) o)->sync, second, nano) : success)
-#define object_wakeup(o, all)           (((object_t *) o)->sync ? ((object_t *) o)->sync->func->wakeup(((object_t *) o)->sync, all) : success)
+#define object_wait(o, second, nano)    (((o) && ((object_t *) o)->sync) ? ((object_t *) o)->sync->func->wait(((object_t *) o)->sync, second, nano) : success)
+#define object_wakeup(o, all)           (((o) && ((object_t *) o)->sync) ? ((object_t *) o)->sync->func->wakeup(((object_t *) o)->sync, all) : success)
 
 union variable;
 
