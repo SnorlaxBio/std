@@ -37,6 +37,8 @@ typedef void *                      address_t;
 #define uint32_of(o)                (*((uint32_t *)(o)))
 #define uint64_of(o)                (*((uint64_t *)(o)))
 
+#define uint64_from_uint32x2(f, s)  (((uint64_t)((uint32_t) (f)) << 32LU) | ((uint64_t)((uint32_t) (s))))
+
 extern address_t memory_gen(address_t m, uint64_t n);
 extern address_t memory_rem(address_t m);
 
@@ -142,5 +144,6 @@ typedef void (*variable_callback_t)(variable_t);
 
 #define variable_int32(v)       ((variable_t) { .i32 = v })
 #define variable_uint32(v)      ((variable_t) { .u32 = v })
+#define variable_uint64(v)      ((variable_t) { .u64 = v })
 
 #endif // __SNORLAX__H__
