@@ -37,6 +37,7 @@ struct collection_func {
     collection_node_t * (*end)(collection_t *);
     collection_node_t * (*find)(collection_t *, variable_t);
     uint64_t (*size)(collection_t *);
+    collection_node_t * (*node)(variable_t);
 };
 
 struct collection_node {
@@ -61,6 +62,7 @@ struct collection_node_func {
 #define collection_end(collection)              ((collection)->func->end(collection))
 #define collection_find(collection, o)          ((collection)->func->find(collection, o))
 #define collection_size(collection)             ((collection)->func->size(collection))
+#define collection_node(collection, v)          ((collection)->func->node(v))
 
 #define collection_node_rem(node)               ((node) ? (node)->func->rem(node) : nil)
 #define collection_node_get(node)               ((node)->func->get(node))

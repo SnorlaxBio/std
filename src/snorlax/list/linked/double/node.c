@@ -11,10 +11,22 @@
 
 #include "../../../list.h"
 
-static list_linked_double_node_t * list_linked_double_node_func_rem(list_linked_double_node_t * node);
+#include "../../../queue.h"
+
+typedef list_linked_double_node_t * (*list_linked_double_node_func_rem_t)(list_linked_double_node_t *);
+typedef variable_t (*list_linked_double_node_func_get_t)(list_linked_double_node_t *);
+typedef void (*list_linked_double_node_func_set_t)(list_linked_double_node_t *, variable_t);
+typedef list_linked_double_node_t * (*list_linked_double_node_func_del_t)(list_linked_double_node_t *, list_linked_double_t *);
+typedef list_linked_double_node_t * (*list_linked_double_node_func_prev_t)(list_linked_double_node_t *);
+typedef list_linked_double_node_t * (*list_linked_double_node_func_next_t)(list_linked_double_node_t *);
 
 static list_linked_double_node_func_t func = {
-    list_linked_double_node_func_rem
+    (list_linked_double_node_func_rem_t) queue_node_func_rem,
+    (list_linked_double_node_func_get_t) queue_node_func_get,
+    (list_linked_double_node_func_set_t) queue_node_func_set,
+    (list_linked_double_node_func_del_t) queue_node_func_del,
+    (list_linked_double_node_func_prev_t) queue_node_func_prev,
+    (list_linked_double_node_func_next_t) queue_node_func_next
 };
 
 extern list_linked_double_node_t * list_linked_double_node_gen(list_linked_double_t * collection, variable_t o) {

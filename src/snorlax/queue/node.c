@@ -12,7 +12,12 @@
 #include "../queue.h"
 
 static queue_node_func_t func = {
-
+    queue_node_func_rem,
+    queue_node_func_get,
+    queue_node_func_set,
+    queue_node_func_del,
+    queue_node_func_prev,
+    queue_node_func_next
 };
 
 extern queue_node_t * queue_node_gen(variable_t v) {
