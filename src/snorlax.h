@@ -145,5 +145,6 @@ typedef void (*variable_callback_t)(variable_t);
 #define variable_int32(v)       ((variable_t) { .i32 = v })
 #define variable_uint32(v)      ((variable_t) { .u32 = v })
 #define variable_uint64(v)      ((variable_t) { .u64 = v })
+#define variable_int64(v)       ((variable_t) { .i64 = v })
 
 #endif // __SNORLAX__H__
