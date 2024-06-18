@@ -17,6 +17,7 @@ set(SNORLAX_STD_SOURCE      src/snorlax.c
                             src/snorlax/buffer.c
                             src/snorlax/thread/posix.c
                             src/snorlax/sync/posix/mutex.c
+                            src/snorlax/queue/node.c
                             src/snorlax/list/linked/double.c
                             src/snorlax/list/linked/double/node.c
                             src/snorlax/buffer/pool.c)

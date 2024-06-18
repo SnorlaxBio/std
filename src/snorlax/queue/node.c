@@ -7,6 +7,8 @@
  * @since       June 18, 2024
  */
 
+#include <stdlib.h>
+
 #include "../queue.h"
 
 static queue_node_func_t func = {
