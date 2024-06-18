@@ -19,10 +19,10 @@ typedef struct buffer_pool_func buffer_pool_func_t;
 struct buffer_pool {
     buffer_pool_func_t * func;
     sync_t * sync;
-    uint32_t size;
-    uint32_t page;
+    uint64_t size;
+    uint64_t page;
     buffer_t ** container;
-    uint32_t last;
+    uint64_t last;
 };
 
 struct buffer_pool_func {
@@ -31,7 +31,7 @@ struct buffer_pool_func {
     buffer_t * (*rel)(buffer_pool_t *, buffer_t *);
 };
 
-extern buffer_pool_t * buffer_pool_gen(uint32_t size, uint32_t page);
+extern buffer_pool_t * buffer_pool_gen(uint64_t size, uint64_t page);
 
 #define buffer_pool_rem(pool)           (pool->func->rem(pool))
 #define buffer_pool_get(pool)           (pool->func->get(pool))

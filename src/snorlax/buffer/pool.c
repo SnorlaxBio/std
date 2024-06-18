@@ -21,7 +21,7 @@ static buffer_pool_func_t func = {
     buffer_pool_func_rel
 };
 
-extern buffer_pool_t * buffer_pool_gen(uint32_t size, uint32_t page) {
+extern buffer_pool_t * buffer_pool_gen(uint64_t size, uint64_t page) {
     buffer_pool_t * pool = (buffer_pool_t *) calloc(1, sizeof(buffer_pool_t));
 
     pool->func = &func;
@@ -29,7 +29,7 @@ extern buffer_pool_t * buffer_pool_gen(uint32_t size, uint32_t page) {
     pool->page = page;
     if(pool->size > 0) {
         pool->container = (buffer_t **) malloc(pool->size * sizeof(buffer_t *));
-        for(uint32_t i = 0; i < pool->size; i++) {
+        for(uint64_t i = 0; i < pool->size; i++) {
             pool->container[i] = buffer_gen(pool->page);
         }
     }
@@ -41,7 +41,7 @@ extern buffer_pool_t * buffer_pool_gen(uint32_t size, uint32_t page) {
 static buffer_pool_t * buffer_pool_func_rem(buffer_pool_t * pool) {
     if(pool) {
         object_lock(pool);
-        for(uint32_t i = 0; i < pool->last; i++) {
+        for(uint64_t i = 0; i < pool->last; i++) {
             pool->container[i] = buffer_rem(pool->container[i]);
         }
         free(pool->container);

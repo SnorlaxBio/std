@@ -13,25 +13,25 @@
 
 #include "buffer/pool.h"
 
-static uint32_t page = 8;
+static uint64_t page = 8;
 
 static buffer_t * buffer_func_rem(buffer_t * buffer);
 static uint8_t * buffer_func_front(buffer_t * buffer);
 static uint8_t * buffer_func_back(buffer_t * buffer);
 
-static uint32_t buffer_func_position_get(buffer_t * buffer);
-static void buffer_func_position_set(buffer_t * buffer, uint32_t v);
+static uint64_t buffer_func_position_get(buffer_t * buffer);
+static void buffer_func_position_set(buffer_t * buffer, uint64_t v);
 
-static uint32_t buffer_func_size_get(buffer_t * buffer);
-static void buffer_func_size_set(buffer_t * buffer, uint32_t v);
+static uint64_t buffer_func_size_get(buffer_t * buffer);
+static void buffer_func_size_set(buffer_t * buffer, uint64_t v);
 
-static uint32_t buffer_func_capacity_get(buffer_t * buffer);
-static void buffer_func_capacity_set(buffer_t * buffer, uint32_t v);
+static uint64_t buffer_func_capacity_get(buffer_t * buffer);
+static void buffer_func_capacity_set(buffer_t * buffer, uint64_t v);
 
-static void buffer_func_reset(buffer_t * buffer, uint32_t capacity);
+static void buffer_func_reset(buffer_t * buffer, uint64_t capacity);
 
-static uint32_t buffer_func_remain(buffer_t * buffer);
-static uint32_t buffer_func_length(buffer_t * buffer);
+static uint64_t buffer_func_remain(buffer_t * buffer);
+static uint64_t buffer_func_length(buffer_t * buffer);
 
 static buffer_func_t func = {
     buffer_func_rem,
@@ -50,7 +50,7 @@ static buffer_func_t func = {
     buffer_func_length
 };
 
-extern buffer_t * buffer_gen(uint32_t capacity) {
+extern buffer_t * buffer_gen(uint64_t capacity) {
     buffer_t * buffer = (buffer_t *) calloc(1, sizeof(buffer_t));
 
     buffer->func = &func;
@@ -101,17 +101,17 @@ static uint8_t * buffer_func_back(buffer_t * buffer) {
     return mem;
 }
 
-static uint32_t buffer_func_position_get(buffer_t * buffer) {
+static uint64_t buffer_func_position_get(buffer_t * buffer) {
     object_lock(buffer);
 
-    uint32_t n = buffer->position;
+    uint64_t n = buffer->position;
 
     object_unlock(buffer);
 
     return n;
 }
 
-static void buffer_func_position_set(buffer_t * buffer, uint32_t v) {
+static void buffer_func_position_set(buffer_t * buffer, uint64_t v) {
     object_lock(buffer);
 
     if(buffer->size <= v) {
@@ -123,17 +123,17 @@ static void buffer_func_position_set(buffer_t * buffer, uint32_t v) {
     object_unlock(buffer);
 }
 
-static uint32_t buffer_func_size_get(buffer_t * buffer) {
+static uint64_t buffer_func_size_get(buffer_t * buffer) {
     object_lock(buffer);
 
-    uint32_t n = buffer->size;
+    uint64_t n = buffer->size;
 
     object_unlock(buffer);
 
     return n;
 }
 
-static void buffer_func_size_set(buffer_t * buffer, uint32_t v) {
+static void buffer_func_size_set(buffer_t * buffer, uint64_t v) {
     object_lock(buffer);
 
     if(v < buffer->position && buffer->capacity <= v) {
@@ -145,17 +145,17 @@ static void buffer_func_size_set(buffer_t * buffer, uint32_t v) {
     object_unlock(buffer);
 }
 
-static uint32_t buffer_func_capacity_get(buffer_t * buffer) {
+static uint64_t buffer_func_capacity_get(buffer_t * buffer) {
     object_lock(buffer);
 
-    uint32_t n = buffer->capacity;
+    uint64_t n = buffer->capacity;
 
     object_unlock(buffer);
 
     return n;
 }
 
-static void buffer_func_capacity_set(buffer_t * buffer, uint32_t v) {
+static void buffer_func_capacity_set(buffer_t * buffer, uint64_t v) {
     object_lock(buffer);
 
     if(v < buffer->size) {
@@ -168,7 +168,7 @@ static void buffer_func_capacity_set(buffer_t * buffer, uint32_t v) {
     object_unlock(buffer);
 }
 
-static void buffer_func_reset(buffer_t * buffer, uint32_t capacity) {
+static void buffer_func_reset(buffer_t * buffer, uint64_t capacity) {
     object_lock(buffer);
 
     if(capacity == invalid) capacity = page;
@@ -183,10 +183,10 @@ static void buffer_func_reset(buffer_t * buffer, uint32_t capacity) {
     object_unlock(buffer);
 }
 
-static uint32_t buffer_func_remain(buffer_t * buffer) {
+static uint64_t buffer_func_remain(buffer_t * buffer) {
     return buffer->capacity - buffer->size;
 }
 
-static uint32_t buffer_func_length(buffer_t * buffer) {
+static uint64_t buffer_func_length(buffer_t * buffer) {
     return buffer->size - buffer->position;
 }

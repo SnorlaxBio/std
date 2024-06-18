@@ -30,9 +30,9 @@ struct buffer {
     sync_t *        sync;
 
     uint8_t *       mem;
-    uint32_t        position;
-    uint32_t        size;
-    uint32_t        capacity;
+    uint64_t        position;
+    uint64_t        size;
+    uint64_t        capacity;
 };
 
 struct buffer_func {
@@ -41,22 +41,22 @@ struct buffer_func {
     uint8_t * (*front)(buffer_t *);
     uint8_t * (*back)(buffer_t *);
 
-    uint32_t (*position_get)(buffer_t *);
-    void (*position_set)(buffer_t *, uint32_t);
+    uint64_t (*position_get)(buffer_t *);
+    void (*position_set)(buffer_t *, uint64_t);
 
-    uint32_t (*size_get)(buffer_t *);
-    void (*size_set)(buffer_t *, uint32_t);
+    uint64_t (*size_get)(buffer_t *);
+    void (*size_set)(buffer_t *, uint64_t);
 
-    uint32_t (*capacity_get)(buffer_t *);
-    void (*capacity_set)(buffer_t *, uint32_t);
+    uint64_t (*capacity_get)(buffer_t *);
+    void (*capacity_set)(buffer_t *, uint64_t);
 
-    void (*reset)(buffer_t *, uint32_t);
+    void (*reset)(buffer_t *, uint64_t);
 
-    uint32_t (*remain)(buffer_t *);
-    uint32_t (*length)(buffer_t *);
+    uint64_t (*remain)(buffer_t *);
+    uint64_t (*length)(buffer_t *);
 };
 
-extern buffer_t * buffer_gen(uint32_t capacity);
+extern buffer_t * buffer_gen(uint64_t capacity);
 
 #define buffer_rem(buffer)              ((buffer)->func->rem(buffer))
 
