@@ -152,9 +152,10 @@ typedef void (*variable_callback_t)(variable_t);
 #define variable_uint64(v)      ((variable_t) { .u64 = v })
 #define variable_int64(v)       ((variable_t) { .i64 = v })
 
+// TODO: TIMESTAMP
 #define snorlaxdbg(expression, type, format, ...) do {              \
     printf("[%s|%s:%d|%s] ", type, __FILE__, __LINE__, __func__);   \
-    printf(format\, ##__VA_ARGS__);                                 \
+    printf(format, ##__VA_ARGS__);                                  \
     if(expression) {                                                \
         printf(" => [critical] ");                                  \
         printf(#expression);                                        \
