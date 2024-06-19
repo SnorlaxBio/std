@@ -19,6 +19,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define ___notnull
+
 typedef void *                      address_t;
 
 #define success                     0
