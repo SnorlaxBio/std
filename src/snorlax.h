@@ -22,7 +22,9 @@
 #include <stdlib.h>
 
 #define ___notnull
+#define ___null
 #define ___synchronized
+#define ___notsynchronized
 
 typedef void *                      address_t;
 
