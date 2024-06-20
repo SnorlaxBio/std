@@ -26,6 +26,8 @@
 #define ___synchronized
 #define ___notsynchronized
 
+#define ___notused(v)               ((void)(v))
+
 typedef void *                      address_t;
 
 #define success                     0
