@@ -23,8 +23,8 @@
 
 #define ___notnull
 #define ___null
-#define ___synchronized
-#define ___notsynchronized
+#define ___sync
+#define ___notsync
 
 #define ___notused(v)               ((void)(v))
 
