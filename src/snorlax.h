@@ -21,6 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define ___private
+#define ___public
+#define ___protected
 #define ___expose
 #define ___notnull
 #define ___null
