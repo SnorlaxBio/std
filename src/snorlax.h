@@ -163,9 +163,9 @@ typedef void (*variable_callback_t)(variable_t);
 // TODO: TIMESTAMP
 #define snorlaxdbg(expression, type, format, ...) do {              \
     printf("[%s|%s:%d|%s] ", type, __FILE__, __LINE__, __func__);   \
-    printf(format, ##__VA_ARGS__);                                  \
+    printf(format " ", ##__VA_ARGS__);                              \
     if(expression) {                                                \
-        printf(" => [critical] ");                                  \
+        printf("=> [critical] ");                                   \
         printf(#expression);                                        \
         printf("\n");                                               \
         abort();                                                    \
