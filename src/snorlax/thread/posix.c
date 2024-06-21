@@ -16,6 +16,8 @@ static thread_posix_t * thread_posix_func_rem(thread_posix_t * o);
 static int32_t thread_posix_func_on(thread_posix_t * o);
 static int32_t thread_posix_func_off(thread_posix_t * o, thread_posix_cancel_t cancel);
 static int32_t thread_posix_func_alive(thread_posix_t * o);
+static thread_posix_cancel_t thread_posix_func_cancel_get(___notnull thread_posix_t * o);
+static void thread_posix_func_cancel_set(___notnull thread_posix_t * o, thread_posix_cancel_t cancel);
 
 static void * posix_start_routine(void * arg);
 static void thread_posix_func_cancel(thread_posix_t * o);
@@ -24,7 +26,9 @@ static thread_posix_func_t func = {
     thread_posix_func_rem,
     thread_posix_func_on,
     thread_posix_func_off,
-    thread_posix_func_alive
+    thread_posix_func_alive,
+    thread_posix_func_cancel_get,
+    thread_posix_func_cancel_set
 };
 
 extern thread_posix_t * thread_posix_gen(thread_posix_routine_t run) {
@@ -93,6 +97,22 @@ static int32_t thread_posix_func_off(thread_posix_t * o, thread_posix_cancel_t c
 
 static int32_t thread_posix_func_alive(thread_posix_t * o) {
     return !pthread_equal(o->handle, 0) && pthread_kill(o->handle, 0) == 0;
+}
+
+static thread_posix_cancel_t thread_posix_func_cancel_get(___notnull thread_posix_t * o) {
+#ifndef   RELEASE
+    snorlaxdbg(o == nil, "critical", "");
+#endif // RELEASE
+
+    return o->cancel;
+}
+
+static void thread_posix_func_cancel_set(___notnull thread_posix_t * o, thread_posix_cancel_t cancel) {
+#ifndef   RELEASE
+    snorlaxdbg(o == nil, "critical", "");
+#endif // RELEASE
+
+    o->cancel = cancel;
 }
 
 static void thread_posix_func_cancel(thread_posix_t * o) {

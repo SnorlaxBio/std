@@ -5,6 +5,8 @@
  * 
  * @author      snorlax <ceo@snorlax.bio>
  * @since       June 16, 2024
+ * 
+ * @todo        cancel 을 atomic 변수로 처리하자.
  */
 
 #ifndef   __SNORLAX__THREAD_POSIX__H__
@@ -39,6 +41,9 @@ struct thread_posix_func {
     int32_t (*on)(thread_posix_t *);
     int32_t (*off)(thread_posix_t *, thread_posix_cancel_t);
     int32_t (*alive)(thread_posix_t *);
+
+    thread_posix_cancel_t (*cancel_get)(___notnull thread_posix_t *);
+    void (*cancel_set)(___notnull thread_posix_t *, thread_posix_cancel_t);
 };
 
 extern thread_posix_t * thread_posix_gen(thread_posix_routine_t run);

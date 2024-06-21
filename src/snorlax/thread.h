@@ -36,6 +36,9 @@ struct thread_func {
     int32_t (*on)(thread_t *);
     int32_t (*off)(thread_t *, thread_cancel_t);
     int32_t (*alive)(thread_t *);
+
+    thread_cancel_t (*cancel_get)(___notnull thread_t *);
+    void (*cancel_set)(___notnull thread_t *, thread_cancel_t);
 };
 
 extern thread_t * thread_gen(thread_routine_t run);
@@ -45,10 +48,7 @@ extern thread_t * thread_gen(thread_routine_t run);
 #define thread_off(thread, cancel)      ((thread) ? (thread)->func->off(thread, cancel) : success)
 #define thread_alive(thread)            ((thread) ? (thread)->func->alive(thread) : false)
 
-#define thread_cancel_set(thread, f) do {       \
-    if(thread) {                                \
-        (thread)->cancel = (f);                 \
-    }                                           \
-} while(0)
+#define thread_cancel_get(thread)       ((thread)->func->cancel_get(thread))
+#define thread_cancel_set(thread, f)    ((thread)->func->cancel_set(thread, f))
 
 #endif // __SNORLAX__THREAD__H__
