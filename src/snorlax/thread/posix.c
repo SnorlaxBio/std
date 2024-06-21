@@ -72,7 +72,9 @@ static int32_t thread_posix_func_off(thread_posix_t * o, thread_posix_cancel_t c
     object_lock((object_t *) o);
 
     if(!pthread_equal(o->handle, 0)) {
-        o->cancel = (cancel ? cancel : thread_posix_func_cancel);
+        if(o->cancel == nil) {
+            o->cancel = (cancel ? cancel : thread_posix_func_cancel);
+        }
         void * result = nil;
         int err = pthread_join(o->handle, &result);
         if(err) {
