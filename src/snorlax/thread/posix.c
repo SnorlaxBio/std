@@ -101,7 +101,7 @@ static int32_t thread_posix_func_alive(thread_posix_t * o) {
 
 static thread_posix_cancel_t thread_posix_func_cancel_get(___notnull thread_posix_t * o) {
 #ifndef   RELEASE
-    snorlaxdbg(o == nil, "critical", "");
+    snorlaxdbg(o == nil, false, "critical", "");
 #endif // RELEASE
 
     return o->cancel;
@@ -109,7 +109,7 @@ static thread_posix_cancel_t thread_posix_func_cancel_get(___notnull thread_posi
 
 static void thread_posix_func_cancel_set(___notnull thread_posix_t * o, thread_posix_cancel_t cancel) {
 #ifndef   RELEASE
-    snorlaxdbg(o == nil, "critical", "");
+    snorlaxdbg(o == nil, false, "critical", "");
 #endif // RELEASE
 
     o->cancel = cancel;
