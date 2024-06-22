@@ -38,6 +38,7 @@ typedef void *                      address_t;
 #define fail                        (-1)
 #define invalid                     (-1)
 #define nil                         ((void *) 0)
+#define infinite                    (0xFFFFFFFF)
 
 #define address_of(v)               (&(v))
 
