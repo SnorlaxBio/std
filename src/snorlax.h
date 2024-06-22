@@ -125,7 +125,7 @@ struct object_func {
     object_t * (*rem)(object_t *);
 };
 
-#define object_rem(o)                   (o->func->rem(o))
+#define object_rem(o)                   ((o)->func->rem(o))
 
 #define object_lock(o)                  (((o) && ((object_t *) o)->sync) ? ((object_t *) o)->sync->func->lock(((object_t *) o)->sync) : success)
 #define object_unlock(o)                (((o) && ((object_t *) o)->sync) ? ((object_t *) o)->sync->func->unlock(((object_t *) o)->sync) : success)
