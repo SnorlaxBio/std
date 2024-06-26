@@ -8,6 +8,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "buffer.h"
 
@@ -33,6 +34,8 @@ static void buffer_func_reset(buffer_t * buffer, uint64_t capacity);
 static uint64_t buffer_func_remain(buffer_t * buffer);
 static uint64_t buffer_func_length(buffer_t * buffer);
 
+static void buffer_func_adjust(buffer_t * buffer, uint64_t capacity);
+
 static buffer_func_t func = {
     buffer_func_rem,
     buffer_func_front,
@@ -47,7 +50,9 @@ static buffer_func_t func = {
 
     buffer_func_reset,
     buffer_func_remain,
-    buffer_func_length
+    buffer_func_length,
+
+    buffer_func_adjust
 };
 
 extern buffer_t * buffer_gen(uint64_t capacity) {
@@ -189,4 +194,19 @@ static uint64_t buffer_func_remain(buffer_t * buffer) {
 
 static uint64_t buffer_func_length(buffer_t * buffer) {
     return buffer->size - buffer->position;
+}
+
+static void buffer_func_adjust(buffer_t * buffer, uint64_t capacity) {
+    if(buffer->position == buffer->size) {
+        buffer->position = 0;
+        buffer->size = 0;
+    } else if((buffer->size - buffer->position) <= buffer->position) {
+        memcpy(buffer->mem, &buffer->mem[buffer->position], (buffer->size - buffer->position));
+        buffer->size = buffer->size - buffer->position;
+        buffer->position = 0;
+    }
+
+    buffer->capacity = buffer->size + capacity;
+
+    buffer->mem = (uint8_t *) memory_gen(buffer->mem, buffer->capacity);
 }

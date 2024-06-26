@@ -54,27 +54,31 @@ struct buffer_func {
 
     uint64_t (*remain)(buffer_t *);
     uint64_t (*length)(buffer_t *);
+
+    void (*adjust)(buffer_t *, uint64_t);
 };
 
 extern buffer_t * buffer_gen(uint64_t capacity);
 
-#define buffer_rem(buffer)              ((buffer)->func->rem(buffer))
+#define buffer_rem(buffer)                  ((buffer)->func->rem(buffer))
 
-#define buffer_front(buffer)            ((buffer)->func->front(buffer))
-#define buffer_back(buffer)             ((buffer)->func->back(buffer))
+#define buffer_front(buffer)                ((buffer)->func->front(buffer))
+#define buffer_back(buffer)                 ((buffer)->func->back(buffer))
 
-#define buffer_position_get(buffer)     ((buffer)->func->position_get(buffer))
-#define buffer_position_set(buffer, v)  ((buffer)->func->position_set(buffer, v))
+#define buffer_position_get(buffer)         ((buffer)->func->position_get(buffer))
+#define buffer_position_set(buffer, v)      ((buffer)->func->position_set(buffer, v))
 
-#define buffer_size_get(buffer)         ((buffer)->func->size_get(buffer))
-#define buffer_size_set(buffer, v)      ((buffer)->func->size_set(buffer, v))
+#define buffer_size_get(buffer)             ((buffer)->func->size_get(buffer))
+#define buffer_size_set(buffer, v)          ((buffer)->func->size_set(buffer, v))
 
-#define buffer_capacity_get(buffer)     ((buffer)->func->capacity_get(buffer))
-#define buffer_capacity_set(buffer, v)  ((buffer)->func->capacity_set(buffer, v))
+#define buffer_capacity_get(buffer)         ((buffer)->func->capacity_get(buffer))
+#define buffer_capacity_set(buffer, v)      ((buffer)->func->capacity_set(buffer, v))
 
-#define buffer_reset(buffer, capacity)  ((buffer)->func->reset(buffer, capacity))
+#define buffer_reset(buffer, capacity)      ((buffer)->func->reset(buffer, capacity))
 
-#define buffer_remain(buffer)           ((buffer)->func->remain(buffer))
-#define buffer_length(buffer)           ((buffer)->func->length(buffer))
+#define buffer_remain(buffer)               ((buffer)->func->remain(buffer))
+#define buffer_length(buffer)               ((buffer)->func->length(buffer))
+
+#define buffer_adjust(buffer, capacity)     ((buffer)->func->adjust(buffer, capacity))
 
 #endif // __SNORLAX__BUFFER__H__
