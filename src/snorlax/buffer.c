@@ -70,9 +70,7 @@ extern buffer_t * buffer_gen(uint64_t capacity) {
 
 static buffer_t * buffer_func_rem(buffer_t * buffer) {
     object_lock(buffer);
-    printf("1 %p\n", buffer->mem);
     buffer->mem = memory_rem(buffer->mem);
-    printf("2 %p\n", buffer->mem);
     object_unlock(buffer);
 
     buffer->sync = sync_rem(buffer->sync);
