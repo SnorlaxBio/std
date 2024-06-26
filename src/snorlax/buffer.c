@@ -75,6 +75,8 @@ static buffer_t * buffer_func_rem(buffer_t * buffer) {
 
     buffer->sync = sync_rem(buffer->sync);
 
+    free(buffer);
+
     return nil;
 }
 
