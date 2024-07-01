@@ -11,7 +11,7 @@
 
 #include "serializer.h"
 
-extern int64_t string_serialize(buffer_t * in, buffer_t * out) {
+extern int64_t string_simple_serialize(buffer_t * in, buffer_t * out) {
 #ifndef   RELEASE
     snorlaxdbg(in == nil, false, "critical", "");
     snorlaxdbg(out == nil, false, "critical", "");
@@ -40,6 +40,7 @@ extern int64_t string_serialize(buffer_t * in, buffer_t * out) {
 
         memcpy(buffer_back(out), buffer_front(in), n);
         buffer_size_set(out, buffer_size_get(out) + n);
+        buffer_position_set(in, buffer_position_get(in) + n);
 
         s = buffer_back(out);
         s[buffer_size_get(out)] = 0;
