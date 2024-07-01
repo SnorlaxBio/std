@@ -34,7 +34,7 @@ extern int64_t string_simple_deserialize(buffer_t * in, buffer_t * out) {
         char * ret = index(s, '\n');
 
         if(ret != nil) {
-            uint64_t n = ret - s;
+            uint64_t n = ret - s + 1;
 
             if(buffer_remain(out) < n) {
                 uint64_t capacity = buffer_size_get(out) + n + 1;
