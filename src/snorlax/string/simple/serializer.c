@@ -25,7 +25,8 @@ extern int64_t string_simple_serialize(buffer_t * in, buffer_t * out) {
     }
 
     char * s = buffer_back(in);
-    s[buffer_size_get(in)] = 0;
+    *s = 0;
+    
     s = buffer_front(in);
 
     if(s) {
