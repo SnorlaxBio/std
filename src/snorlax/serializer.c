@@ -22,7 +22,7 @@ extern int64_t serialize(buffer_t * in, buffer_t * out) {
     if(buffer_length(in) > 0) {
         int64_t n = buffer_length(in);
 
-        if(n < buffer_remain(out)) buffer_capacity_set(out, buffer_capacity_get(out) + n);
+        if(n < buffer_remain(out)) buffer_capacity_set(out, buffer_size_get(out) + n);
 
         memcpy(buffer_back(out), buffer_front(in), n);
 
