@@ -26,7 +26,7 @@ extern int64_t string_simple_serialize(buffer_t * in, buffer_t * out) {
 
     char * s = buffer_back(in);
     *s = 0;
-    
+
     s = buffer_front(in);
 
     if(s) {
@@ -46,7 +46,7 @@ extern int64_t string_simple_serialize(buffer_t * in, buffer_t * out) {
             buffer_position_set(in, buffer_position_get(in) + n);
 
             s = buffer_back(out);
-            s[buffer_size_get(out)] = 0;
+            *s = 0;
 
             return n;
         }
