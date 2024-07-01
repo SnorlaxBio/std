@@ -28,24 +28,26 @@ extern int64_t string_simple_serialize(buffer_t * in, buffer_t * out) {
     s[buffer_size_get(in)] = 0;
     s = buffer_front(in);
 
-    char * ret = rindex(s, '\n');
+    if(s) {
+        char * ret = rindex(s, '\n');
 
-    if(ret != nil) {
-        int64_t n = ret - s;
+        if(ret != nil) {
+            int64_t n = ret - s;
 
-        if(buffer_remain(out) < n) {
-            uint64_t capacity = buffer_size_get(out) + n + 1;
-            capacity = (capacity / 8 + 1) * 8;
+            if(buffer_remain(out) < n) {
+                uint64_t capacity = buffer_size_get(out) + n + 1;
+                capacity = (capacity / 8 + 1) * 8;
+            }
+
+            memcpy(buffer_back(out), buffer_front(in), n);
+            buffer_size_set(out, buffer_size_get(out) + n);
+            buffer_position_set(in, buffer_position_get(in) + n);
+
+            s = buffer_back(out);
+            s[buffer_size_get(out)] = 0;
+
+            return n;
         }
-
-        memcpy(buffer_back(out), buffer_front(in), n);
-        buffer_size_set(out, buffer_size_get(out) + n);
-        buffer_position_set(in, buffer_position_get(in) + n);
-
-        s = buffer_back(out);
-        s[buffer_size_get(out)] = 0;
-
-        return n;
     }
 
     return 0;
