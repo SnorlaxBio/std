@@ -21,8 +21,10 @@ extern int64_t deserialize(buffer_t * in, buffer_t * out) {
     if(buffer_length(in) > 0) {
         int64_t n = buffer_length(in);
         printf("%ld\n", n);
-
+        printf("%p %p\n", buffer_back(out), buffer_front(in));
         if(n < buffer_remain(out)) buffer_capacity_set(out, buffer_size_get(out) + n);
+
+        printf("%p %p\n", buffer_back(out), buffer_front(in));
 
         memcpy(buffer_back(out), buffer_front(in), n);
 
