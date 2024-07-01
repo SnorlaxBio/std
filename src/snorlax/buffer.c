@@ -102,6 +102,7 @@ static uint8_t * buffer_func_back(buffer_t * buffer) {
 
     object_lock(buffer);
 
+    printf("%lu %lu\n", buffer->size, buffer->capacity);
     if(buffer->mem && (buffer->size < buffer->capacity)) {
         mem = &buffer->mem[buffer->size];
     }
