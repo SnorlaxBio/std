@@ -47,7 +47,7 @@ extern int64_t string_simple_deserialize(buffer_t * in, buffer_t * out) {
             buffer_position_set(in, buffer_position_get(in) + n);
 
             s = buffer_back(out);
-            s[buffer_size_get(out)] = 0;
+            s[buffer_size_get(out) + 1] = 0;
 
             return n;
         }
