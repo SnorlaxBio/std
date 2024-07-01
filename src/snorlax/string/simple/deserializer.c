@@ -42,7 +42,7 @@ extern int64_t string_simple_deserialize(buffer_t * in, buffer_t * out) {
 
             if(buffer_remain(out) < n) {
                 uint64_t capacity = buffer_size_get(out) + n + 1;
-                capacity = (capacity / 8 + 1) * 8;
+                capacity = ((capacity + 1) / 8 + 1) * 8;
                 buffer_capacity_set(out, capacity);
             }
             printf("5\n");
