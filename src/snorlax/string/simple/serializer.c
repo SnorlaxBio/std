@@ -32,7 +32,7 @@ extern int64_t string_simple_serialize(buffer_t * in, buffer_t * out) {
         char * ret = rindex(s, '\n');
 
         if(ret != nil) {
-            int64_t n = ret - s + 1;
+            int64_t n = ret - s;
 
             if(buffer_remain(out) < n) {
                 uint64_t capacity = buffer_size_get(out) + n + 1;
