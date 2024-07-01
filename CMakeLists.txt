@@ -24,7 +24,8 @@ set(SNORLAX_STD_SOURCE      src/snorlax.c
                             src/snorlax/string/simple/deserializer.c
                             src/snorlax/string/simple/serializer.c
                             src/snorlax/deserializer.c
-                            src/snorlax/serializer.c)
+                            src/snorlax/serializer.c
+                            src/snorlax/nanosecond.c)
 
 set(SNORLAX_STD_HEADER      src/snorlax.h
                             src/snorlax/thread.h
@@ -39,7 +40,8 @@ set(SNORLAX_STD_HEADER      src/snorlax.h
                             src/snorlax/string/simple/deserializer.h
                             src/snorlax/string/simple/serializer.h
                             src/snorlax/deserializer.h
-                            src/snorlax/serializer.h)
+                            src/snorlax/serializer.h
+                            src/snorlax/nanosecond.h)
 
 add_library(snorlax-std ${SNORLAX_STD_SOURCE}
                         ${SNORLAX_STD_HEADER})

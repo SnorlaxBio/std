@@ -32,6 +32,5 @@ extern int64_t serialize(buffer_t * in, buffer_t * out) {
         return n;
     }
     
-
     return 0;
 }
