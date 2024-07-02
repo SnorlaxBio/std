@@ -48,6 +48,7 @@ struct list_linked_double_func {
 
 struct list_linked_double_node {
     list_linked_double_node_func_t *    func;
+    sync_t *                            sync;
     list_linked_double_t *              collection;
     list_linked_double_node_t *         prev;
     list_linked_double_node_t *         next;
