@@ -1,13 +1,8 @@
 /**
  * @file        snorlax.h
- * @brief       Snorlax standard library header file
- * @details     Snorlax 의 다양한 라이브러리, 프레임워크와 소프트웨어 구현에서
- *              표준으로 사용할 타입, 구조체, 매크로 그리고 함수들을 선언한 파일입니다.
- *              
- *              이 선언 안에는 자주 사용되어지는 프리미티브 타입과 자주 사용하는 성공,
- *              실패 혹은 널과 같은 상수가 선언되어 있다.
+ * @brief       
+ * @details     
  * 
- *              기본적인 이름 규칙은 스네이크 형태이다.
  * 
  * @author      snorlax <ceo@snorlax.bio>
  * @since       June 15, 2024
@@ -99,23 +94,6 @@ struct object_func;
 typedef struct object object_t;
 typedef struct object_func object_func_t;
 
-/**
- * @struct      struct object
- * @brief       기본 객체 인터페이스 자료 구조
- * @details     특별한 케이스가 아니면 거의 모든 구조체는 아래와 같은 구조를 지닌다.
- *              이런 구조를 지니기 때문에 암시적 형변환을 통하여 object_func_t 에 정의된
- *              함수를 공통적으로 호출할 수 있다.
- * 
- *              간단하게 객체의 소멸자를 호출하는 것은 `o->func->rem(o)` 와 같이 호출하여
- *              어떤 타입과 상관없이 객체를 쉽게 삭제할 수 있도록 하였다.
- *              
- *              함수 테이블을 둔 것은 함수 타입을 객체의 멤버로 정의하면 구조체의 크기가 
- *              커지기 때문이다. 또한, func 멤버를 통해서 객체가 어떤 객체인지 유추할 수 있다.
- *              또한, 그렇게 구현할 수 있다.
- *              
- *              어찌보면, 클래스와 유사한 구조이긴 하다.
- *              차후에 클래스와 성능에 대해서 벤치마킹을 수행할 필요는 있다.
- */
 struct object {
     object_func_t * func;
     sync_t * sync;
@@ -136,12 +114,6 @@ union variable;
 
 typedef union variable variable_t;
 
-/**
- * @union           union variable
- * @brief           다양한 타입의 변수를 사용할 수 있는 타입
- * @details         일반화 프로그래밍을 해야 할 때, 다양한 타입의 변수형을 나타낼 수 있다.
- *                  다만, 64비트 이상의 타입이 필요할 경우는 포인터를 사용해야 한다.
- */
 union variable {
     int8_t    i8;
     int16_t   i16;
@@ -161,7 +133,6 @@ typedef void (*variable_callback_t)(variable_t);
 #define variable_uint64(v)      ((variable_t) { .u64 = v })
 #define variable_int64(v)       ((variable_t) { .i64 = v })
 
-// TODO: TIMESTAMP
 #define snorlaxdbg(expression, force, type, format, ...) do {           \
     if(expression) {                                                    \
         printf("[%s|%s:%d|%s] ", type, __FILE__, __LINE__, __func__);   \
