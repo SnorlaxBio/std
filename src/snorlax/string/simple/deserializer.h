@@ -1,12 +1,3 @@
-/**
- * @file        snorlax/string/simple/deserializer.h
- * @brief
- * @details
- * 
- * @author      snorlax <ceo@snorlax.bio>
- * @since       June 30, 2024
- */
-
 #ifndef   __SNORLAX__STRING_SIMPLE_DESERIALIZER__H__
 #define   __SNORLAX__STRING_SIMPLE_DESERIALIZER__H__
 

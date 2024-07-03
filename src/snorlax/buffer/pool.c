@@ -1,12 +1,3 @@
-/**
- * @file        snorlax/buffer/pool.c
- * @brief
- * @details
- * 
- * @author      snorlax <ceo@snorlax.bio>
- * @since       June 15, 2024
- */
-
 #include <stdlib.h>
 
 #include "pool.h"

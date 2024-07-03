@@ -1,12 +1,3 @@
-/**
- * @file        snorlax/list/linked/double/node.c
- * @brief
- * @details
- * 
- * @author      snorlax <ceo@snorlax.bio>
- * @since       June 16, 2024
- */
-
 #include <stdlib.h>
 
 #include "../../../list.h"

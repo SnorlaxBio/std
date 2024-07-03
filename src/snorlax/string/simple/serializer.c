@@ -1,12 +1,3 @@
-/**
- * @file        snorlax/string/simple/serializer.c
- * @brief
- * @details
- * 
- * @author      snorlax <ceo@snorlax.bio>
- * @since       June 30, 2024
- */
-
 #include <string.h>
 
 #include "serializer.h"

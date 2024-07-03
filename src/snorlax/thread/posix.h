@@ -1,14 +1,3 @@
-/**
- * @file        snorlax/thread/posix.h
- * @brief
- * @details     
- * 
- * @author      snorlax <ceo@snorlax.bio>
- * @since       June 16, 2024
- * 
- * @todo        cancel 을 atomic 변수로 처리하자.
- */
-
 #ifndef   __SNORLAX__THREAD_POSIX__H__
 #define   __SNORLAX__THREAD_POSIX__H__
 

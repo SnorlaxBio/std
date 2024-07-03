@@ -1,12 +1,3 @@
-/**
- * @file        snorlax/sync/posix.h
- * @brief
- * @details
- * 
- * @author      snorlax <ceo@snorlax.bio>
- * @since       June 15, 2024
- */
-
 #ifndef   __SNORLAX__SYNC_POSIX__H__
 #define   __SNORLAX__SYNC_POSIX__H__
 

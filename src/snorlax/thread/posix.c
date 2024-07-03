@@ -1,12 +1,3 @@
-/**
- * @file        snorlax/thread/posix.c
- * @brief
- * @details
- * 
- * @author      snorlax <ceo@snorlax.bio>
- * @since       June 16, 2024
- */
-
 #include <signal.h>
 #include <stdlib.h>
 

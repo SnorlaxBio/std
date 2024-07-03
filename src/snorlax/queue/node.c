@@ -1,12 +1,3 @@
-/**
- * @file        snorlax/queue/node.c
- * @brief
- * @details
- * 
- * @author      snorlax <ceo@snorlax.bio>
- * @since       June 18, 2024
- */
-
 #include <stdlib.h>
 
 #include "../queue.h"
