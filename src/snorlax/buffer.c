@@ -38,6 +38,8 @@ static void buffer_func_adjust(buffer_t * buffer, uint64_t capacity);
 
 static void buffer_func_write(buffer_t * buffer, const char * data, uint64_t len);
 
+static uint8_t * buffer_func_pop(buffer_t * buffer, uint64_t n);
+
 static buffer_func_t func = {
     buffer_func_rem,
     buffer_func_front,
@@ -55,7 +57,9 @@ static buffer_func_t func = {
     buffer_func_length,
 
     buffer_func_adjust,
-    buffer_func_write
+    buffer_func_write,
+
+    buffer_func_pop
 };
 
 extern buffer_t * buffer_gen(uint64_t capacity) {
@@ -224,4 +228,12 @@ static void buffer_func_write(buffer_t * buffer, const char * data, uint64_t len
     memcpy(&buffer->mem[buffer->size], data, len);
 
     buffer->size = buffer->size + len;
+}
+
+static uint8_t * buffer_func_pop(buffer_t * buffer, uint64_t n) {
+    if(buffer_remain(buffer) < n) {
+        buffer_func_capacity_set(buffer, buffer_func_capacity_get(buffer) + n);
+    }
+
+    return &buffer->mem[buffer->size];
 }
