@@ -38,7 +38,7 @@ static void buffer_func_adjust(buffer_t * buffer, uint64_t capacity);
 
 static void buffer_func_write(buffer_t * buffer, const char * data, uint64_t len);
 
-static uint8_t * buffer_func_pop(buffer_t * buffer, uint64_t n);
+static uint8_t * buffer_func_pop(buffer_t * buffer, uint64_t n, int32_t clear);
 
 static buffer_func_t func = {
     buffer_func_rem,
@@ -230,9 +230,13 @@ static void buffer_func_write(buffer_t * buffer, const char * data, uint64_t len
     buffer->size = buffer->size + len;
 }
 
-static uint8_t * buffer_func_pop(buffer_t * buffer, uint64_t n) {
+static uint8_t * buffer_func_pop(buffer_t * buffer, uint64_t n, int32_t clear) {
     if(buffer_remain(buffer) < n) {
         buffer_func_capacity_set(buffer, buffer_func_capacity_get(buffer) + n);
+    }
+
+    if(clear) {
+        memset(&buffer->mem[buffer->size], 0, n);
     }
 
     return &buffer->mem[buffer->size];
