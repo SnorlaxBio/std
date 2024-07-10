@@ -147,4 +147,6 @@ typedef void (*variable_callback_t)(variable_t);
     }                                                                   \
 } while(0)
 
+extern void hexdump(FILE * stream, const uint8_t * data, uint64_t len);
+
 #endif // __SNORLAX__H__

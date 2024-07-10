@@ -33,5 +33,7 @@ static int snorlax_std_check_list_linked_double(void) {
     list_linked_double_clear(list, snorlax_bucket_print_int32);
     list = list_linked_double_rem(list);
 
+    hexdump(stdout, "hello world", 11);
+
     return success;
 }
