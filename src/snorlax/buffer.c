@@ -39,6 +39,7 @@ static void buffer_func_adjust(buffer_t * buffer, uint64_t capacity);
 static void buffer_func_write(buffer_t * buffer, const char * data, uint64_t len);
 
 static uint8_t * buffer_func_pop(buffer_t * buffer, uint64_t n, int32_t clear);
+static uint8_t * buffer_func_rel(buffer_t * buffer, uint64_t n);
 
 static buffer_func_t func = {
     buffer_func_rem,
@@ -59,7 +60,8 @@ static buffer_func_t func = {
     buffer_func_adjust,
     buffer_func_write,
 
-    buffer_func_pop
+    buffer_func_pop,
+    buffer_func_rel
 };
 
 extern buffer_t * buffer_gen(uint64_t capacity) {
@@ -239,5 +241,17 @@ static uint8_t * buffer_func_pop(buffer_t * buffer, uint64_t n, int32_t clear) {
         memset(&buffer->mem[buffer->size], 0, n);
     }
 
-    return &buffer->mem[buffer->size];
+    uint8_t * out = &buffer->mem[buffer->size];
+
+    buffer->size = buffer->size  + n;
+
+    return out;
+}
+
+static uint8_t * buffer_func_rel(buffer_t * buffer, uint64_t n) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(buffer->position + n > buffer->size, false, "critical", "");
+#endif // RELEASE
+    buffer->position = buffer->position + n;
 }
