@@ -254,4 +254,6 @@ static uint8_t * buffer_func_rel(buffer_t * buffer, uint64_t n) {
     snorlaxdbg(buffer->position + n > buffer->size, false, "critical", "");
 #endif // RELEASE
     buffer->position = buffer->position + n;
+
+    return &buffer->mem[buffer->size];
 }
