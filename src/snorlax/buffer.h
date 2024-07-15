@@ -28,66 +28,41 @@ typedef struct buffer_pool_func buffer_pool_func_t;
 struct buffer {
     buffer_func_t * func;
     sync_t *        sync;
-
-    uint8_t *       mem;
-    uint64_t        position;
-    uint64_t        size;
-    uint64_t        capacity;
 };
 
 struct buffer_func {
     buffer_t * (*rem)(buffer_t *);
-
     uint8_t * (*front)(buffer_t *);
     uint8_t * (*back)(buffer_t *);
-
     uint64_t (*position_get)(buffer_t *);
     void (*position_set)(buffer_t *, uint64_t);
-
     uint64_t (*size_get)(buffer_t *);
     void (*size_set)(buffer_t *, uint64_t);
-
     uint64_t (*capacity_get)(buffer_t *);
     void (*capacity_set)(buffer_t *, uint64_t);
-
     void (*reset)(buffer_t *, uint64_t);
-
     uint64_t (*remain)(buffer_t *);
     uint64_t (*length)(buffer_t *);
-
     void (*adjust)(buffer_t *, uint64_t);
-
-    void (*write)(buffer_t *, const char *, uint64_t);
-
-    // uint8_t * (*pop)(buffer_t *, uint64_t, int32_t);
-    // uint8_t * (*rel)(buffer_t *, uint64_t);
+    void (*write)(buffer_t *, const uint8_t *, uint64_t);
 };
 
 extern buffer_t * buffer_gen(uint64_t capacity);
 
 #define buffer_rem(buffer)                  ((buffer)->func->rem(buffer))
-
 #define buffer_front(buffer)                ((buffer)->func->front(buffer))
 #define buffer_back(buffer)                 ((buffer)->func->back(buffer))
-
 #define buffer_position_get(buffer)         ((buffer)->func->position_get(buffer))
 #define buffer_position_set(buffer, v)      ((buffer)->func->position_set(buffer, v))
-
 #define buffer_size_get(buffer)             ((buffer)->func->size_get(buffer))
 #define buffer_size_set(buffer, v)          ((buffer)->func->size_set(buffer, v))
-
 #define buffer_capacity_get(buffer)         ((buffer)->func->capacity_get(buffer))
 #define buffer_capacity_set(buffer, v)      ((buffer)->func->capacity_set(buffer, v))
-
 #define buffer_reset(buffer, capacity)      ((buffer)->func->reset(buffer, capacity))
-
 #define buffer_remain(buffer)               ((buffer)->func->remain(buffer))
 #define buffer_length(buffer)               ((buffer)->func->length(buffer))
-
 #define buffer_adjust(buffer, capacity)     ((buffer)->func->adjust(buffer, capacity))
 #define buffer_write(buffer, data, len)     ((buffer)->func->write(buffer, data, len))
 
-// #define buffer_pop(buffer, n, clear)        ((buffer)->func->pop(buffer, n, clear))
-// #define buffer_rel(buffer, n)               ((buffer)->func->rel(buffer, n))
 
 #endif // __SNORLAX__BUFFER__H__

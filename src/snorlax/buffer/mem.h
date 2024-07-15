@@ -50,12 +50,24 @@ struct buffer_mem_func {
 
     void (*adjust)(buffer_mem_t *, uint64_t);
 
-    void (*write)(buffer_mem_t *, const char *, uint64_t);
-
-    uint8_t * (*pop)(buffer_mem_t *, uint64_t, int32_t);
-    uint8_t * (*rel)(buffer_mem_t *, uint64_t);
+    void (*write)(buffer_mem_t *, const uint8_t *, uint64_t);
 };
 
-// extern buffer_mem_t * buffer_mem_gen(uint64_t capacity);
+extern buffer_mem_t * buffer_mem_gen(uint64_t capacity);
+
+#define buffer_mem_rem(buffer)              ((buffer)->func->rem(buffer))
+#define buffer_mem_front(buffer)            ((buffer)->func->front(buffer))
+#define buffer_mem_back(buffer)             ((buffer)->func->back(buffer))
+#define buffer_mem_position_get(buffer)     ((buffer)->func->position_get(buffer))
+#define buffer_mem_position_set(buffer, v)  ((buffer)->func->position_set(buffer, v))
+#define buffer_mem_size_get(buffer)         ((buffer)->func->size_get(buffer))
+#define buffer_mem_size_set(buffer, v)      ((buffer)->func->size_set(buffer, v))
+#define buffer_mem_capacity_get(buffer)     ((buffer)->func->capacity_get(buffer))
+#define buffer_mem_capacity_set(buffer, v)  ((buffer)->func->capacity_set(buffer, v))
+#define buffer_mem_reset(buffer, n)         ((buffer)->func->reset(buffer, n))
+#define buffer_mem_remain(buffer)           ((buffer)->func->remain(buffer))
+#define buffer_mem_length(buffer)           ((buffer)->func->length(buffer))
+#define buffer_mem_adjust(buffer, n)        ((buffer)->func->adjust(buffer, n))
+#define buffer_mem_write(buffer, data, n)   ((buffer)->func->write(buffer, data, n))
 
 #endif // __SNORLAX__BUFFER_MEM__H__
