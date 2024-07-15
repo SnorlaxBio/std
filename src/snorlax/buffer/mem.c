@@ -189,7 +189,7 @@ static void buffer_mem_func_write(buffer_mem_t * buffer, const uint8_t * data, u
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
 
-    if((buffer->capacity - buffer->size) < len) {
+    if((buffer->capacity - buffer->size) < len || buffer->mem == nil) {
         buffer->capacity = buffer->size + len;
         buffer->mem = memory_gen(buffer->mem, buffer->capacity);
     }
