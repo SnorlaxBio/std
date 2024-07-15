@@ -134,6 +134,8 @@ static void buffer_mem_func_capacity_set(buffer_mem_t * buffer, uint64_t v) {
 #endif // RELEASE
 
     buffer->capacity = v;
+
+    buffer->mem = memory_gen(buffer->mem, buffer->capacity);
 }
 
 static void buffer_mem_func_reset(buffer_mem_t * buffer, uint64_t capacity) {
