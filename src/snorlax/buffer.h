@@ -59,8 +59,8 @@ struct buffer_func {
 
     void (*write)(buffer_t *, const char *, uint64_t);
 
-    uint8_t * (*pop)(buffer_t *, uint64_t, int32_t);
-    uint8_t * (*rel)(buffer_t *, uint64_t);
+    // uint8_t * (*pop)(buffer_t *, uint64_t, int32_t);
+    // uint8_t * (*rel)(buffer_t *, uint64_t);
 };
 
 extern buffer_t * buffer_gen(uint64_t capacity);
@@ -87,7 +87,7 @@ extern buffer_t * buffer_gen(uint64_t capacity);
 #define buffer_adjust(buffer, capacity)     ((buffer)->func->adjust(buffer, capacity))
 #define buffer_write(buffer, data, len)     ((buffer)->func->write(buffer, data, len))
 
-#define buffer_pop(buffer, n, clear)        ((buffer)->func->pop(buffer, n, clear))
-#define buffer_rel(buffer, n)               ((buffer)->func->rel(buffer, n))
+// #define buffer_pop(buffer, n, clear)        ((buffer)->func->pop(buffer, n, clear))
+// #define buffer_rel(buffer, n)               ((buffer)->func->rel(buffer, n))
 
 #endif // __SNORLAX__BUFFER__H__
