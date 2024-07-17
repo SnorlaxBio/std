@@ -20,6 +20,7 @@ static void buffer_list_func_adjust(buffer_list_t * buffer, uint64_t n);
 static void buffer_list_func_write(buffer_list_t * buffer, const uint8_t * data, uint64_t n);
 
 static void buffer_list_func_push(buffer_list_t * buffer, buffer_list_node_t * node);
+static void buffer_list_func_del(buffer_list_t * buffer, buffer_list_node_t * node);
 
 static buffer_list_func_t func = {
     buffer_list_func_rem,
@@ -33,7 +34,8 @@ static buffer_list_func_t func = {
     buffer_list_func_length,
     buffer_list_func_adjust,
     buffer_list_func_write,
-    buffer_list_func_push
+    buffer_list_func_push,
+    buffer_list_func_del
 };
 
 extern buffer_list_t * buffer_list_gen(void) {
@@ -245,4 +247,31 @@ static void buffer_list_func_push(buffer_list_t * buffer, buffer_list_node_t * n
     node->collection = buffer;
 
     buffer->back = nil;
+}
+
+static void buffer_list_func_del(buffer_list_t * buffer, buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    buffer_list_node_t * prev = node->prev;
+    buffer_list_node_t * next = node->next;
+
+    if(prev) {
+        prev->next = next;
+        node->prev = nil;
+    } else {
+        buffer->head = next;
+    }
+
+    if(next) {
+        next->prev = prev;
+        node->next = nil;
+    } else {
+        buffer->tail = prev;
+    }
+
+    buffer->size = buffer->size - 1;
+    node->collection = nil;
 }

@@ -53,6 +53,7 @@ struct buffer_list_func {
     void (*write)(buffer_list_t *, const uint8_t *, uint64_t);
 
     void (*push)(buffer_list_t *, buffer_list_node_t *);
+    void (*del)(buffer_list_t *, buffer_list_node_t *);
 };
 
 struct buffer_list_node {
@@ -65,9 +66,6 @@ struct buffer_list_node {
 
 struct buffer_list_node_func {
     buffer_list_node_t * (*rem)(buffer_list_node_t *);
-
-    uint8_t * (*mem)(buffer_list_node_t *);
-    int32_t (*done)(buffer_list_node_t *);
 };
 
 extern buffer_list_t * buffer_list_gen(void);
@@ -87,9 +85,8 @@ extern buffer_list_t * buffer_list_gen(void);
 #define buffer_list_adjust(buffer, n)           ((buffer)->func->adjust(buffer, n))
 #define buffer_list_write(buffer, data, len)    ((buffer)->func->write(buffer, data, len))
 #define buffer_list_push(buffer, node)          ((buffer)->func->push(buffer, node))
+#define buffer_list_del(buffer, node)           ((buffer)->func->del(buffer, node))
 
 #define buffer_list_node_rem(node)              ((node)->func->rem(node))
-#define buffer_list_node_mem(node)              ((node)->func->mem(node))
-#define buffer_list_node_done(node)             ((node)->func->done(node))
 
 #endif // __SNORLAX__BUFFER_LIST__H__
