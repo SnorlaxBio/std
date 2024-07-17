@@ -29,6 +29,9 @@ static buffer_list_func_t func = {
     buffer_list_func_position_get,
     buffer_list_func_position_set,
     buffer_list_func_size_get,
+    buffer_list_func_size_set,
+    buffer_list_func_capacity_get,
+    buffer_list_func_capacity_set,
     buffer_list_func_reset,
     buffer_list_func_remain,
     buffer_list_func_length,
@@ -77,7 +80,7 @@ static uint8_t * buffer_list_func_front(buffer_list_t * buffer) {
 #endif // RELEASE
 
     // TODO: UPGRADE
-    return buffer_list_node_mem(buffer->front);
+    return (uint8_t *) buffer->front;
 }
 
 static uint8_t * buffer_list_func_back(buffer_list_t * buffer) {
@@ -86,7 +89,7 @@ static uint8_t * buffer_list_func_back(buffer_list_t * buffer) {
 #endif // RELEASE
 
     // TODO: UPGRADE
-    return buffer_list_node_mem(buffer->back);
+    return (uint8_t *) buffer->back;
 }
 
 static uint64_t buffer_list_func_position_get(buffer_list_t * buffer) {
@@ -211,22 +214,8 @@ static void buffer_list_func_adjust(buffer_list_t * buffer, uint64_t n) {
 static void buffer_list_func_write(buffer_list_t * buffer, const uint8_t * data, uint64_t n) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(true, false, "critical", "");
 #endif // RELEASE
-
-    buffer_list_node_t * node = buffer_list_node_gen(data, n);
-
-    if(buffer->tail) {
-        buffer->tail->next = node;
-        node->prev = buffer->tail;
-    } else {
-        buffer->head = node;
-    }
-
-    buffer->tail = node;
-    buffer->size = buffer->size + 1;
-    node->collection = buffer;
-
-    buffer->back = nil;
 }
 
 static void buffer_list_func_push(buffer_list_t * buffer, buffer_list_node_t * node) {

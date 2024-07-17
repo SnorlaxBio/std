@@ -66,6 +66,7 @@ struct buffer_list_node {
 
 struct buffer_list_node_func {
     buffer_list_node_t * (*rem)(buffer_list_node_t *);
+    int32_t (*done)(buffer_list_node_t *);
 };
 
 extern buffer_list_t * buffer_list_gen(void);
@@ -88,5 +89,6 @@ extern buffer_list_t * buffer_list_gen(void);
 #define buffer_list_del(buffer, node)           ((buffer)->func->del(buffer, node))
 
 #define buffer_list_node_rem(node)              ((node)->func->rem(node))
+#define buffer_list_node_done(node)             ((node)->func->done(node))
 
 #endif // __SNORLAX__BUFFER_LIST__H__
