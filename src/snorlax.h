@@ -50,6 +50,7 @@ typedef void *                      address_t;
 
 extern address_t memory_gen(address_t m, uint64_t n);
 extern address_t memory_rem(address_t m);
+extern address_t memory_dup(address_t m, uint64_t n);
 
 struct sync;
 struct sync_func;

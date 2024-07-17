@@ -51,6 +51,8 @@ struct buffer_list_func {
     uint64_t (*length)(buffer_list_t *);
     void (*adjust)(buffer_list_t *, uint64_t);
     void (*write)(buffer_list_t *, const uint8_t *, uint64_t);
+
+    void (*push)(buffer_list_t *, buffer_list_node_t *);
 };
 
 struct buffer_list_node {

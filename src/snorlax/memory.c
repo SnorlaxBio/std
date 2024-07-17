@@ -52,3 +52,16 @@ extern address_t memory_rem(address_t m) {
 
     return nil;
 }
+
+extern address_t memory_dup(address_t m, uint64_t n) {
+#ifndef   RELEASE
+    snorlaxdbg(m == nil, false, "critical", "");
+    snorlaxdbg(n == 0, false, "critical", "");
+#endif // RELEASE
+
+    void * o = malloc(n);
+
+    memcpy(o, m, n);
+
+    return o;
+}
