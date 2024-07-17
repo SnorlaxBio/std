@@ -86,6 +86,7 @@ extern buffer_list_t * buffer_list_gen(void);
 #define buffer_list_length(buffer)              ((buffer)->func->length(buffer))
 #define buffer_list_adjust(buffer, n)           ((buffer)->func->adjust(buffer, n))
 #define buffer_list_write(buffer, data, len)    ((buffer)->func->write(buffer, data, len))
+#define buffer_list_push(buffer, node)          ((buffer)->func->push(buffer, node))
 
 #define buffer_list_node_rem(node)              ((node)->func->rem(node))
 #define buffer_list_node_mem(node)              ((node)->func->mem(node))
