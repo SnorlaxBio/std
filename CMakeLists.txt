@@ -22,6 +22,7 @@ set(SNORLAX_STD_SOURCE      src/snorlax.c
                             src/snorlax/list/linked/double/node.c
                             src/snorlax/buffer/pool.c
                             src/snorlax/buffer/mem.c
+                            src/snorlax/buffer/list.c
                             src/snorlax/string/simple/deserializer.c
                             src/snorlax/string/simple/serializer.c
                             src/snorlax/deserializer.c
@@ -39,6 +40,7 @@ set(SNORLAX_STD_HEADER      src/snorlax.h
                             src/snorlax/sync/posix/mutex.h
                             src/snorlax/buffer/pool.h
                             src/snorlax/buffer/mem.h
+                            src/snorlax/buffer/list.h
                             src/snorlax/string/simple/deserializer.h
                             src/snorlax/string/simple/serializer.h
                             src/snorlax/deserializer.h
