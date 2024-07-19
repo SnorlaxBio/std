@@ -172,7 +172,7 @@ static uint64_t buffer_list_func_remain(buffer_list_t * buffer) {
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
 
-    return buffer->tail != buffer->back && buffer->back != nil;
+    return buffer->tail != buffer->back && buffer->back != nil ? 1 : 0;
 }
 
 static uint64_t buffer_list_func_length(buffer_list_t * buffer) {
@@ -180,7 +180,7 @@ static uint64_t buffer_list_func_length(buffer_list_t * buffer) {
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
 
-    return buffer->front != nil && buffer->front != buffer->back;
+    return buffer->front != nil && buffer->front != buffer->back ? 1 : 0;
 }
 
 static void buffer_list_func_adjust(buffer_list_t * buffer, uint64_t n) {
