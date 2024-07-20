@@ -73,6 +73,4 @@ struct list_node_func {
 
 #define list_node_rem(node)                     ((node)->func->rem(node))
 
-
-
 #endif // __SNORLAX__LIST__H__
