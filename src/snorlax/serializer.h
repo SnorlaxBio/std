@@ -5,6 +5,8 @@
  * 
  * @author      snorlax <ceo@snorlax.bio>
  * @since       June 30, 2024
+ * 
+ * @todo        업그레이드 하자... 별로 마음에 들지 않는다. 생각하지 못하고 짰다.
  */
 
 #ifndef   __SNORLAX__SERIALZER__H__

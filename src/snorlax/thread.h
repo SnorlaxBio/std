@@ -37,8 +37,8 @@ struct thread_func {
     int32_t (*off)(thread_t *, thread_cancel_t);
     int32_t (*alive)(thread_t *);
 
-    thread_cancel_t (*cancel_get)(___notnull thread_t *);
-    void (*cancel_set)(___notnull thread_t *, thread_cancel_t);
+    thread_cancel_t (*cancel_get)(___notnull thread_t *);           // TODO: UPGRADE: 이름이 마음에 들지 않는다. 개인적으로 '_' 가 없었으면 한다. 즉, 하나의 단어
+    void (*cancel_set)(___notnull thread_t *, thread_cancel_t);     // TODO: UPGRADE: 이름이 마음에 들지 않는다. 개인적으로 '_' 가 없었으면 한다. 즉, 하나의 단어
 };
 
 extern thread_t * thread_gen(thread_routine_t run);

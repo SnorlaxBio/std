@@ -17,8 +17,8 @@
 
 struct buffer;
 struct buffer_func;
-struct buffer_pool;
-struct buffer_pool_func;
+struct buffer_pool;             // TODO: REMOVE OR REFACTOR
+struct buffer_pool_func;        // TODO: REMOVE OR REFACTOR
 
 typedef struct buffer buffer_t;
 typedef struct buffer_func buffer_func_t;

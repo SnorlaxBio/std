@@ -124,7 +124,7 @@ union variable {
     uint16_t  u16;
     uint32_t  u32;
     uint64_t  u64;
-    address_t o;
+    address_t o;            // TODO: CHANGE `void * p`
 };
 
 typedef void (*variable_callback_t)(variable_t);

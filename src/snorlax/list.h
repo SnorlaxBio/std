@@ -5,6 +5,8 @@
  * 
  * @author      snorlax <ceo@snorlax.bio>
  * @since       June 16, 2024
+ * 
+ * @todo        list_linked_doube 을 double linked list 로 변경하자.
  */
 
 #ifndef   __SNORLAX__LIST__H__

@@ -5,6 +5,8 @@
  * 
  * @author      snorlax <ceo@snorlax.bio>
  * @since       June 30, 2024
+ * 
+ * @deprecated
  */
 
 #ifndef   __SNORLAX__DESERIALIZER___H__
