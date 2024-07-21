@@ -17,7 +17,9 @@ set(SNORLAX_STD_SOURCE      src/snorlax.c
                             src/snorlax/thread/posix.c
                             src/snorlax/sync/posix/mutex.c
                             src/snorlax/buffer/mem.c
+                            src/snorlax/buffer/mem/node.c
                             src/snorlax/buffer/list.c
+                            src/snorlax/buffer/list/node.c
                             src/snorlax/nanosecond.c)
 
 set(SNORLAX_STD_HEADER      src/snorlax.h

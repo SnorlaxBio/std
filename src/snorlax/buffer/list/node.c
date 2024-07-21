@@ -1,0 +1,196 @@
+#include <string.h>
+#include <stdlib.h>
+
+#include "../list.h"
+
+static buffer_list_node_t * buffer_list_node_func_rem(buffer_list_node_t * node);
+static void * buffer_list_node_func_front(buffer_list_node_t * node);
+static void * buffer_list_node_func_back(buffer_list_node_t * node);
+static uint64_t buffer_list_node_func_length(buffer_list_node_t * node);
+static uint64_t buffer_list_node_func_remain(buffer_list_node_t * node);
+static uint64_t buffer_list_node_func_position_get(buffer_list_node_t * node);
+static void buffer_list_node_func_position_set(buffer_list_node_t * node, uint64_t v);
+static uint64_t buffer_list_node_func_size_get(buffer_list_node_t * node);
+static void buffer_list_node_func_size_set(buffer_list_node_t * node, uint64_t v);
+static uint64_t buffer_list_node_func_capacity_get(buffer_list_node_t * node);
+static void buffer_list_node_func_capacity_set(buffer_list_node_t * node, uint64_t v);
+static void buffer_list_node_func_clear(buffer_list_node_t * node);
+
+static buffer_list_node_func_t func = {
+    buffer_list_node_func_rem,
+    buffer_list_node_func_front,
+    buffer_list_node_func_back,
+    buffer_list_node_func_length,
+    buffer_list_node_func_remain,
+    buffer_list_node_func_position_get,
+    buffer_list_node_func_position_set,
+    buffer_list_node_func_size_get,
+    buffer_list_node_func_size_set,
+    buffer_list_node_func_capacity_get,
+    buffer_list_node_func_capacity_set,
+    buffer_list_node_func_clear
+};
+
+extern buffer_list_node_t * buffer_list_node_gen(buffer_list_t * buffer, const void * data, uint64_t n) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(n == 0, false, "critical", "");
+#endif // RELEASE
+
+    buffer_list_node_t * node = (buffer_list_node_t *) calloc(1, sizeof(buffer_list_node_t));
+
+    node->func = address_of(func);
+
+    if(buffer->tail) {
+        buffer->tail->next = node;
+        node->prev = buffer->tail;
+    } else {
+        buffer->head = node;
+        buffer->front = node;
+    }
+    node->collection = buffer;
+    buffer->tail = node;
+    buffer->size = buffer->size + 1;
+
+    uint64_t page = buffer->page ? buffer->page : 1;
+
+    node->capacity = (n / page + 1) * page;
+    node->mem = memory_gen(nil, node->capacity);
+
+    if(data) {
+        memcpy(node->mem, data, n);
+        node->size = n;
+    }
+
+    return node;
+}
+
+static buffer_list_node_t * buffer_list_node_func_rem(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    buffer_list_t * collection = node->collection;
+    if(collection) {
+        buffer_list_node_t * prev = node->prev;
+        buffer_list_node_t * next = node->next;
+
+        if(prev) {
+            prev->next = next;
+            node->prev = nil;
+        } else {
+            collection->head = next;
+        }
+
+        if(next) {
+            next->prev = prev;
+            node->next = nil;
+        } else {
+            collection->tail = prev;
+        }
+
+        node->collection = nil;
+        collection->size = collection->size - 1;
+    }
+
+    node->mem = memory_rem(node->mem);
+
+    free(node);
+
+    return nil;
+}
+
+static void * buffer_list_node_func_front(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    return node->position != node->size ? &(((uint8_t *) node->mem)[node->position]) : nil;
+}
+
+static void * buffer_list_node_func_back(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    return node->size != node->capacity ? &(((uint8_t *) node->mem)[node->size]) : nil;
+}
+
+static uint64_t buffer_list_node_func_length(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    return node->size - node->position;
+}
+
+static uint64_t buffer_list_node_func_remain(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    return node->capacity - node->size;
+}
+
+static uint64_t buffer_list_node_func_position_get(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    return node->position;
+}
+
+static void buffer_list_node_func_position_set(buffer_list_node_t * node, uint64_t v) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+    snorlaxdbg(node->size < v, false, "critical", "");
+#endif // RELEASE
+
+    node->position = v;
+}
+
+static uint64_t buffer_list_node_func_size_get(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    return node->size;
+}
+
+static void buffer_list_node_func_size_set(buffer_list_node_t * node, uint64_t v) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+    snorlaxdbg(v < node->position, false, "critical", "");
+    snorlaxdbg(node->capacity < v, false, "critical", "");
+#endif // RELEASE
+
+    node->size = v;
+}
+
+static uint64_t buffer_list_node_func_capacity_get(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    return node->capacity;
+}
+
+static void buffer_list_node_func_capacity_set(buffer_list_node_t * node, uint64_t v) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+    snorlaxdbg(v < node->size, false, "critical", "");
+#endif // RELEASE
+
+    node->capacity  = v;
+
+    node->mem = memory_gen(node->mem, v);
+}
+
+static void buffer_list_node_func_clear(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    node->position = 0;
+    node->size = 0;
+}
