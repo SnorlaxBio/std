@@ -13,17 +13,16 @@
 #ifndef   __SNORLAX__BUFFER__H__
 #define   __SNORLAX__BUFFER__H__
 
+#include <sys/types.h>
+#include <sys/socket.h>
+
 #include <snorlax.h>
 
 struct buffer;
 struct buffer_func;
-struct buffer_pool;             // TODO: REMOVE OR REFACTOR
-struct buffer_pool_func;        // TODO: REMOVE OR REFACTOR
 
 typedef struct buffer buffer_t;
 typedef struct buffer_func buffer_func_t;
-typedef struct buffer_pool buffer_pool_t;
-typedef struct buffer_pool_func buffer_pool_func_t;
 
 struct buffer {
     buffer_func_t * func;
@@ -32,37 +31,61 @@ struct buffer {
 
 struct buffer_func {
     buffer_t * (*rem)(buffer_t *);
-    uint8_t * (*front)(buffer_t *);
-    uint8_t * (*back)(buffer_t *);
-    uint64_t (*position_get)(buffer_t *);
-    void (*position_set)(buffer_t *, uint64_t);
-    uint64_t (*size_get)(buffer_t *);
-    void (*size_set)(buffer_t *, uint64_t);
-    uint64_t (*capacity_get)(buffer_t *);
-    void (*capacity_set)(buffer_t *, uint64_t);
-    void (*reset)(buffer_t *, uint64_t);
-    uint64_t (*remain)(buffer_t *);
-    uint64_t (*length)(buffer_t *);
-    void (*adjust)(buffer_t *, uint64_t);
-    void (*write)(buffer_t *, const uint8_t *, uint64_t);
+
+    // 버퍼의 기본 수용용량을 
+
+    int64_t (*in)(buffer_t *, int);
+    int64_t (*out)(buffer_t *, int);
+    int64_t (*inmsg)(buffer_t *, int, struct msghdr *, int, int);
+    int64_t (*outmsg)(buffer_t *, int, struct msghdr *, int);
 };
 
-extern buffer_t * buffer_gen(uint64_t capacity);
+#define buffer_rem(buffer)                      ((buffer)->func->rem(buffer))
+#define buffer_in(buffer, fd)                   ((buffer)->func->in(buffer, fd))
+#define buffer_out(buffer, fd)                  ((buffer)->func->out(buffer, fd))
+#define buffer_inmsg(buffer, fd, msg, flags)    ((buffer)->func->inmsg(buffer, fd, msg, flags))
+#define buffer_outmsg(buffer, fd, msg, flags)   ((buffer)->func->outmsg(buffer, fd, msg, flags))
 
-#define buffer_rem(buffer)                  ((buffer)->func->rem(buffer))
-#define buffer_front(buffer)                ((buffer)->func->front(buffer))
-#define buffer_back(buffer)                 ((buffer)->func->back(buffer))
-#define buffer_position_get(buffer)         ((buffer)->func->position_get(buffer))
-#define buffer_position_set(buffer, v)      ((buffer)->func->position_set(buffer, v))
-#define buffer_size_get(buffer)             ((buffer)->func->size_get(buffer))
-#define buffer_size_set(buffer, v)          ((buffer)->func->size_set(buffer, v))
-#define buffer_capacity_get(buffer)         ((buffer)->func->capacity_get(buffer))
-#define buffer_capacity_set(buffer, v)      ((buffer)->func->capacity_set(buffer, v))
-#define buffer_reset(buffer, capacity)      ((buffer)->func->reset(buffer, capacity))
-#define buffer_remain(buffer)               ((buffer)->func->remain(buffer))
-#define buffer_length(buffer)               ((buffer)->func->length(buffer))
-#define buffer_adjust(buffer, capacity)     ((buffer)->func->adjust(buffer, capacity))
-#define buffer_write(buffer, data, len)     ((buffer)->func->write(buffer, data, len))
+// struct buffer_func {
+//     buffer_t * (*rem)(buffer_t *);
+
+
+
+
+
+//     // buffer_node_t * (*node)(buffer_t *);
+
+//     // uint8_t * (*front)(buffer_t *);
+//     // uint8_t * (*back)(buffer_t *);
+//     // uint64_t (*position_get)(buffer_t *);
+//     // void (*position_set)(buffer_t *, uint64_t);
+//     // uint64_t (*size_get)(buffer_t *);
+//     // void (*size_set)(buffer_t *, uint64_t);
+//     // uint64_t (*capacity_get)(buffer_t *);
+//     // void (*capacity_set)(buffer_t *, uint64_t);
+//     // void (*reset)(buffer_t *, uint64_t);
+//     // uint64_t (*remain)(buffer_t *);
+//     // uint64_t (*length)(buffer_t *);
+//     // void (*adjust)(buffer_t *, uint64_t);
+//     // void (*write)(buffer_t *, const uint8_t *, uint64_t);
+// };
+
+// // extern buffer_t * buffer_gen(uint64_t capacity);
+
+// // #define buffer_rem(buffer)                  ((buffer)->func->rem(buffer))
+// // #define buffer_front(buffer)                ((buffer)->func->front(buffer))
+// // #define buffer_back(buffer)                 ((buffer)->func->back(buffer))
+// // #define buffer_position_get(buffer)         ((buffer)->func->position_get(buffer))
+// // #define buffer_position_set(buffer, v)      ((buffer)->func->position_set(buffer, v))
+// // #define buffer_size_get(buffer)             ((buffer)->func->size_get(buffer))
+// // #define buffer_size_set(buffer, v)          ((buffer)->func->size_set(buffer, v))
+// // #define buffer_capacity_get(buffer)         ((buffer)->func->capacity_get(buffer))
+// // #define buffer_capacity_set(buffer, v)      ((buffer)->func->capacity_set(buffer, v))
+// // #define buffer_reset(buffer, capacity)      ((buffer)->func->reset(buffer, capacity))
+// // #define buffer_remain(buffer)               ((buffer)->func->remain(buffer))
+// // #define buffer_length(buffer)               ((buffer)->func->length(buffer))
+// // #define buffer_adjust(buffer, capacity)     ((buffer)->func->adjust(buffer, capacity))
+// // #define buffer_write(buffer, data, len)     ((buffer)->func->write(buffer, data, len))
 
 
 #endif // __SNORLAX__BUFFER__H__

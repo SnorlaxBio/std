@@ -1,47 +1,30 @@
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include "mem.h"
 
 static buffer_mem_t * buffer_mem_func_rem(buffer_mem_t * buffer);
-static uint8_t * buffer_mem_func_front(buffer_mem_t * buffer);
-static uint8_t * buffer_mem_func_back(buffer_mem_t * buffer);
-static uint64_t buffer_mem_func_position_get(buffer_mem_t * buffer);
-static void buffer_mem_func_position_set(buffer_mem_t * buffer, uint64_t v);
-static uint64_t buffer_mem_func_size_get(buffer_mem_t * buffer);
-static void buffer_mem_func_size_set(buffer_mem_t * buffer, uint64_t v);
-static uint64_t buffer_mem_func_capacity_get(buffer_mem_t * buffer);
-static void buffer_mem_func_capacity_set(buffer_mem_t * buffer, uint64_t v);
-static void buffer_mem_func_reset(buffer_mem_t * buffer, uint64_t capacity);
-static uint64_t buffer_mem_func_remain(buffer_mem_t * buffer);
-static uint64_t buffer_mem_func_length(buffer_mem_t * buffer);
-static void buffer_mem_func_adjust(buffer_mem_t * buffer, uint64_t capacity);
-static void buffer_mem_func_write(buffer_mem_t * buffer, const uint8_t * data, uint64_t len);
+static int64_t buffer_mem_func_in(buffer_mem_t * buffer, int fd);
+static int64_t buffer_mem_func_out(buffer_mem_t * buffer, int fd);
+static int64_t buffer_mem_func_inmsg(buffer_mem_t * buffer, int fd, struct msghdr * msg, int flags);
+static int64_t buffer_mem_func_outmsg(buffer_mem_t * buffer, int fd, struct msghdr * msg, int flags);
 
 static buffer_mem_func_t func = {
     buffer_mem_func_rem,
-    buffer_mem_func_front,
-    buffer_mem_func_back,
-    buffer_mem_func_position_get,
-    buffer_mem_func_position_set,
-    buffer_mem_func_size_get,
-    buffer_mem_func_size_set,
-    buffer_mem_func_capacity_get,
-    buffer_mem_func_capacity_set,
-    buffer_mem_func_reset,
-    buffer_mem_func_remain,
-    buffer_mem_func_length,
-    buffer_mem_func_adjust,
-    buffer_mem_func_write
+    buffer_mem_func_in,
+    buffer_mem_func_out,
+    buffer_mem_func_inmsg,
+    buffer_mem_func_outmsg
 };
 
-extern buffer_mem_t * buffer_mem_gen(uint64_t capacity) {
+extern buffer_mem_t * buffer_mem_gen(uint64_t capacity, uint64_t page) {
     buffer_mem_t * buffer = (buffer_mem_t *) calloc(1, sizeof(buffer_mem_t));
 
     buffer->func = address_of(func);
-
     buffer->capacity = capacity;
-
+    buffer->page = page;
     buffer->mem = memory_gen(buffer->mem, capacity);
 
     return buffer;
@@ -52,151 +35,132 @@ static buffer_mem_t * buffer_mem_func_rem(buffer_mem_t * buffer) {
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
 
-    buffer->sync = sync_rem(buffer->sync);
     buffer->mem = memory_rem(buffer->mem);
-
     free(buffer);
 
     return nil;
 }
 
-static uint8_t * buffer_mem_func_front(buffer_mem_t * buffer) {
+static int64_t buffer_mem_func_in(buffer_mem_t * buffer, int fd) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(fd <= invalid, false, "critical", "");
 #endif // RELEASE
 
-    if(buffer->mem && buffer->position < buffer->size) {
-        return &buffer->mem[buffer->position];
+    uint64_t page = buffer->page ? buffer->page : 8192;
+
+    if((buffer->capacity - buffer->size) < page) {
+        buffer->mem = memory_gen(buffer->mem, buffer->size + page);
+        buffer->capacity = buffer->size + page;
     }
 
-    return nil;
-}
+    int64_t n = read(fd, &buffer->mem[buffer->size], buffer->capacity - buffer->size);
 
-static uint8_t * buffer_mem_func_back(buffer_mem_t * buffer) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-#endif // RELEASE
+    if(n > 0) {
+        buffer->size = buffer->size + n;
+    } else if(n == 0) {
+        errno = 0;
 
-    if(buffer->mem && buffer->size < buffer->capacity) {
-        return &buffer->mem[buffer->size];
+        n = fail;
+    } else {
+        if(errno == EAGAIN) {
+            n = 0;
+        }
     }
 
-    return nil;
+    return n;
 }
 
-static uint64_t buffer_mem_func_position_get(buffer_mem_t * buffer) {
+static int64_t buffer_mem_func_out(buffer_mem_t * buffer, int fd) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(fd <= invalid, false, "critical", "");
 #endif // RELEASE
 
-    return buffer->position;
-}
+    if((buffer->size - buffer->position) > 0) {
+        int64_t n = write(fd, &buffer->mem[buffer->position], buffer->size - buffer->position);
 
-static void buffer_mem_func_position_set(buffer_mem_t * buffer, uint64_t v) {
+        if(n > 0) {
+            buffer->position = buffer->position + n;
+        } else if(n == 0) {
 #ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-    snorlaxdbg(buffer->size < v, false, "critical", "");
+            snorlaxdbg(false, true, "check", "");
 #endif // RELEASE
+        } else {
+            if(errno == EAGAIN) {
+                n = 0;
+            }
+        }
 
-    buffer->position = v;
-}
-
-static uint64_t buffer_mem_func_size_get(buffer_mem_t * buffer) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-#endif // RELEASE
-
-    return buffer->size;
-}
-
-static void buffer_mem_func_size_set(buffer_mem_t * buffer, uint64_t v) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-    snorlaxdbg(buffer->capacity < v, false, "critical", "");
-    snorlaxdbg(v < buffer->position, false, "critical", "");
-#endif // RELEASE
-
-    buffer->size = v;
-}
-
-static uint64_t buffer_mem_func_capacity_get(buffer_mem_t * buffer) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-#endif // RELEASE
-
-    return buffer->capacity;
-}
-
-static void buffer_mem_func_capacity_set(buffer_mem_t * buffer, uint64_t v) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-    snorlaxdbg(v < buffer->size, false, "critical", "");
-#endif // RELEASE
-
-    buffer->capacity = v;
-
-    buffer->mem = memory_gen(buffer->mem, buffer->capacity);
-}
-
-static void buffer_mem_func_reset(buffer_mem_t * buffer, uint64_t capacity) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-#endif // RELEASE
-
-    buffer->capacity = capacity;
-
-    buffer->mem = memory_gen(buffer->mem, buffer->capacity);
-
-    buffer->position = 0;
-    buffer->size = 0;
-}
-
-static uint64_t buffer_mem_func_remain(buffer_mem_t * buffer) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-#endif // RELEASE
-
-    return buffer->capacity - buffer->size;
-}
-
-static uint64_t buffer_mem_func_length(buffer_mem_t * buffer) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-#endif // RELEASE
-
-    return buffer->size - buffer->position;
-}
-
-static void buffer_mem_func_adjust(buffer_mem_t * buffer, uint64_t capacity) {
-#ifndef   RELEASE
-    snorlaxdbg(buffer == nil, false, "critical", "");
-#endif // RELEASE
-
-    if(buffer->position == buffer->size) {
-        buffer->position = 0;
-        buffer->size = 0;
-    } else if((buffer->size - buffer->position) <= buffer->position) {
-        memcpy(buffer->mem, &buffer->mem[buffer->position], buffer->size - buffer->position);
-        buffer->size = buffer->size - buffer->position;
-        buffer->position = 0;
+        return n;
     }
 
-    buffer->capacity = buffer->size + capacity;
-
-    buffer->mem = (uint8_t *) memory_gen(buffer->mem, buffer->capacity);
+    return success;
 }
 
-static void buffer_mem_func_write(buffer_mem_t * buffer, const uint8_t * data, uint64_t len) {
+static int64_t buffer_mem_func_inmsg(buffer_mem_t * buffer, int fd, struct msghdr * msg, int flags) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(fd <= invalid, false, "critical", "");
+    snorlaxdbg(msg == nil, false, "critical", "");
 #endif // RELEASE
 
-    if((buffer->capacity - buffer->size) < len || buffer->mem == nil) {
-        buffer->capacity = buffer->size + len;
-        buffer->mem = memory_gen(buffer->mem, buffer->capacity);
+    uint64_t page = buffer->page ? buffer->page : 8192;
+
+    if((buffer->capacity - buffer->size) < page) {
+        buffer->mem = memory_gen(buffer->mem, buffer->size + page);
+        buffer->capacity = buffer->size + page;
     }
 
-    memcpy(&buffer->mem[buffer->size], data, len);
+    struct iovec iov = { &buffer->mem[buffer->size], buffer->capacity - buffer->size };
+    msg->msg_iov = &iov;
+    msg->msg_iovlen = 1;
 
-    buffer->size = buffer->size + len;
+    int64_t n = recvmsg(fd, msg, flags);
+
+    if(n > 0) {
+        buffer->size = buffer->size + n;
+    } else if(n == 0) {
+        errno = 0;
+        return fail;
+    } else {
+        if(errno == EAGAIN) {
+            n = 0;
+        }
+    }
+
+    return n;
 }
+
+static int64_t buffer_mem_func_outmsg(buffer_mem_t * buffer, int fd, struct msghdr * msg, int flags) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(fd <= invalid, false, "critical", "");
+    snorlaxdbg(msg == nil, false, "critical", "");
+#endif // RELEASE
+
+    if(buffer->size - buffer->position > 0) {
+        struct iovec iov = { &buffer->mem[buffer->position], buffer->size - buffer->position };
+        msg->msg_iov = &iov;
+        msg->msg_iovlen = buffer->size - buffer->position;
+
+        int64_t n = sendmsg(fd, msg, flags);
+
+        if(n > 0) {
+            buffer->position = buffer->position + n;
+        } else if(n == 0) {
+#ifndef   RELEASE
+            snorlaxdbg(false, true, "check", "");
+#endif // RELEASE
+        } else {
+            if(errno == EAGAIN) {
+                n = 0;
+            }
+        }
+
+        return n;
+    }
+
+    return success;
+}
+
