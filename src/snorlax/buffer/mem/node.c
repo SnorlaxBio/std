@@ -98,6 +98,14 @@ static void buffer_mem_node_func_position_set(buffer_mem_node_t * node, uint64_t
     snorlaxdbg(node->size < v, false, "critical", "");
 #endif // RELEASE
 
+    snorlaxdbg(false, true, "implement", "node->position == node->size: buffer consuming reset buffer");
+
+    if(node->position == node->size) {
+        node->position = 0;
+        node->size = 0;
+        node->mem = memory_rem(node->mem);
+    }
+
     node->position = v;
 }
 
