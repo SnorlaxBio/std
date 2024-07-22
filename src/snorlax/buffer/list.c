@@ -27,7 +27,7 @@ extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, int64
     buffer_list_t * buffer = (buffer_list_t *) calloc(1, sizeof(buffer_list_t));
 
     buffer->func = address_of(func);
-    buffer->nodegen = nodegen;
+    buffer->nodegen = nodegen ? nodegen : buffer_list_node_gen;
     buffer->page = page;
 
     return buffer;
