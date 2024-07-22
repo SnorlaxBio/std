@@ -170,7 +170,7 @@ extern buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64
 
     buffer_list_node_t * node = buffer->tail;
 
-    if(buffer_list_node_remain(node) < hint) {
+    if(node == nil || buffer_list_node_remain(node) < hint) {
         uint64_t page = buffer->page ? buffer->page : 1;
         node = buffer_list_nodegen(buffer, nil, (hint / page + 1) * page);
     }
