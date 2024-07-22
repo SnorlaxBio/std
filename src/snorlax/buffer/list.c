@@ -7,20 +7,15 @@
 
 #include "list.h"
 
-static buffer_list_t * buffer_list_func_rem(buffer_list_t * buffer);
-static void buffer_list_func_push(buffer_list_t * buffer, const void * data, uint64_t n);
-static void buffer_list_func_pop(buffer_list_t * buffer, uint64_t n);
-static void buffer_list_func_clear(buffer_list_t * buffer);
-static buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer);
-static buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64_t hint);
-
 static buffer_list_func_t func = {
     buffer_list_func_rem,
     buffer_list_func_push,
     buffer_list_func_pop,
     buffer_list_func_clear,
     buffer_list_func_front,
-    buffer_list_func_back
+    buffer_list_func_back,
+    buffer_list_func_add,
+    buffer_list_func_del
 };
 
 extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, int64_t page) {
@@ -33,7 +28,7 @@ extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, int64
     return buffer;
 }
 
-static buffer_list_t * buffer_list_func_rem(buffer_list_t * buffer) {
+extern buffer_list_t * buffer_list_func_rem(buffer_list_t * buffer) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
@@ -58,7 +53,7 @@ static buffer_list_t * buffer_list_func_rem(buffer_list_t * buffer) {
     return nil;
 }
 
-static void buffer_list_func_push(buffer_list_t * buffer, const void * data, uint64_t n) {
+extern void buffer_list_func_push(buffer_list_t * buffer, const void * data, uint64_t n) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
     snorlaxdbg(data == nil, false, "critical", "");
@@ -76,7 +71,7 @@ static void buffer_list_func_push(buffer_list_t * buffer, const void * data, uin
     }
 }
 
-static void buffer_list_func_pop(buffer_list_t * buffer, uint64_t n) {
+extern void buffer_list_func_pop(buffer_list_t * buffer, uint64_t n) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
@@ -130,7 +125,7 @@ static void buffer_list_func_pop(buffer_list_t * buffer, uint64_t n) {
     }
 }
 
-static void buffer_list_func_clear(buffer_list_t * buffer) {
+extern void buffer_list_func_clear(buffer_list_t * buffer) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
@@ -154,7 +149,7 @@ static void buffer_list_func_clear(buffer_list_t * buffer) {
     buffer->front = nil;
 }
 
-static buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer) {
+extern buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
@@ -168,7 +163,7 @@ static buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer) {
     return node;
 }
 
-static buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64_t hint) {
+extern buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64_t hint) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
@@ -179,6 +174,57 @@ static buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64
         uint64_t page = buffer->page ? buffer->page : 1;
         node = buffer_list_nodegen(buffer, nil, (hint / page + 1) * page);
     }
+
+    return node;
+}
+
+extern buffer_list_node_t * buffer_list_func_add(buffer_list_t * buffer, buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(node == nil, false, "critical", "");
+    snorlaxdbg(node->collection, false, "critical", "");
+#endif // RELEASE
+
+    if(buffer->tail) {
+        buffer->tail->next = node;
+        node->prev = buffer->tail;
+    } else {
+        buffer->head = node;
+    }
+
+    buffer->tail = node;
+    buffer->size = buffer->size + 1;
+    node->collection = buffer;
+
+    return node;
+}
+
+extern buffer_list_node_t * buffer_list_func_del(buffer_list_t * buffer, buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+    snorlaxdbg(node == nil, false, "critical", "");
+    snorlaxdbg(buffer != node->collection, false, "critical", "");
+#endif // RELEASE
+
+    buffer_list_node_t * prev = node->prev;
+    buffer_list_node_t * next = node->next;
+
+    if(prev) {
+        prev->next = next;
+        node->prev = nil;
+    } else {
+        buffer->head = next;
+    }
+
+    if(next) {
+        next->prev = prev;
+        node->next = nil;
+    } else {
+        buffer->tail = prev;
+    }
+
+    buffer->size = buffer->size - 1;
+    node->collection = nil;
 
     return node;
 }

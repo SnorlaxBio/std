@@ -44,9 +44,21 @@ struct buffer_list_func {
     void (*clear)(buffer_list_t *);
     buffer_list_node_t * (*front)(buffer_list_t *);
     buffer_list_node_t * (*back)(buffer_list_t *, uint64_t);
+
+    buffer_list_node_t * (*add)(buffer_list_t *, buffer_list_node_t *);
+    buffer_list_node_t * (*del)(buffer_list_t *, buffer_list_node_t *);
 };
 
 extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, int64_t page);
+
+extern buffer_list_t * buffer_list_func_rem(buffer_list_t * buffer);
+extern void buffer_list_func_push(buffer_list_t * buffer, const void * data, uint64_t n);
+extern void buffer_list_func_pop(buffer_list_t * buffer, uint64_t n);
+extern void buffer_list_func_clear(buffer_list_t * buffer);
+extern buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer);
+extern buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64_t hint);
+extern buffer_list_node_t * buffer_list_func_add(buffer_list_t * buffer, buffer_list_node_t * node);
+extern buffer_list_node_t * buffer_list_func_del(buffer_list_t * buffer, buffer_list_node_t * node);
 
 #define buffer_list_rem(buffer)                     ((buffer)->func->rem(buffer))
 #define buffer_list_push(buffer, data, n)           ((buffer)->func->push(buffer, data, n))
@@ -54,6 +66,8 @@ extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, int64
 #define buffer_list_clear(buffer)                   ((buffer)->func->clear(buffer))
 #define buffer_list_front(buffer)                   ((buffer)->func->front(buffer))
 #define buffer_list_back(buffer, hint)              ((buffer)->func->back(buffer, hint))
+#define buffer_list_add(buffer, node)               ((buffer)->func->add(buffer, node))
+#define buffer_list_del(buffer, node)               ((buffer)->func->del(buffer, node))
 
 #define buffer_list_nodegen(buffer, data, n)        ((buffer)->nodegen(buffer, data, n))
 
