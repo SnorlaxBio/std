@@ -27,20 +27,10 @@ extern buffer_list_node_t * buffer_list_node_gen(buffer_list_t * buffer, const v
 
     node->func = address_of(func);
 
-    if(buffer->tail) {
-        buffer->tail->next = node;
-        node->prev = buffer->tail;
-    } else {
-        buffer->head = node;
-        buffer->front = node;
-    }
-    node->collection = buffer;
-    buffer->tail = node;
-    buffer->size = buffer->size + 1;
-
-    uint64_t page = buffer->page ? buffer->page : 1;
+    buffer_list_add(buffer, node);
 
     if(data) {
+        uint64_t page = buffer->page ? buffer->page : 1;
         node->capacity = (n / page + 1) * page;
         node->mem = memory_gen(nil, node->capacity);
 
@@ -56,28 +46,7 @@ extern buffer_list_node_t * buffer_list_node_func_rem(buffer_list_node_t * node)
     snorlaxdbg(node == nil, false, "critical", "");
 #endif // RELEASE
 
-    buffer_list_t * collection = node->collection;
-    if(collection) {
-        buffer_list_node_t * prev = node->prev;
-        buffer_list_node_t * next = node->next;
-
-        if(prev) {
-            prev->next = next;
-            node->prev = nil;
-        } else {
-            collection->head = next;
-        }
-
-        if(next) {
-            next->prev = prev;
-            node->next = nil;
-        } else {
-            collection->tail = prev;
-        }
-
-        node->collection = nil;
-        collection->size = collection->size - 1;
-    }
+    if(node->collection) buffer_list_del(node->collection, node);
 
     node->mem = memory_rem(node->mem);
 
