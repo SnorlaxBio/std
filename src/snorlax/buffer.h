@@ -40,6 +40,7 @@ struct buffer_func {
     void (*clear)(buffer_t *);
     buffer_node_t * (*front)(buffer_t *);
     buffer_node_t * (*back)(buffer_t *, uint64_t);
+    buffer_node_t * (*head)(buffer_t *);
 };
 
 #define buffer_rem(buffer)                      ((buffer)->func->rem(buffer))
@@ -48,6 +49,7 @@ struct buffer_func {
 #define buffer_clear(buffer)                    ((buffer)->func->clear(buffer))
 #define buffer_front(buffer)                    ((buffer)->func->front(buffer))
 #define buffer_back(buffer, hint)               ((buffer)->func->back(buffer, hint))
+#define buffer_head(buffer)                     ((buffer)->func->head(buffer))
 
 struct buffer_node {
     buffer_node_func_t * func;

@@ -37,6 +37,7 @@ struct buffer_mem_func {
     void (*clear)(buffer_mem_t *);
     buffer_mem_node_t * (*front)(buffer_mem_t *);
     buffer_mem_node_t * (*back)(buffer_mem_t *, uint64_t);
+    buffer_mem_node_t * (*head)(buffer_mem_t *);
 };
 
 extern buffer_mem_t * buffer_mem_gen(uint64_t page);
@@ -47,6 +48,7 @@ extern buffer_mem_t * buffer_mem_gen(uint64_t page);
 #define buffer_mem_clear(buffer)                    ((buffer)->func->clear(buffer))
 #define buffer_mem_front(buffer)                    ((buffer)->func->front(buffer))
 #define buffer_mem_back(buffer, hint)               ((buffer)->func->back(buffer, hint))
+#define buffer_mem_head(buffer)                     ((buffer)->func->head(buffer))
 
 struct buffer_mem_node {
     buffer_mem_node_func_t * func;

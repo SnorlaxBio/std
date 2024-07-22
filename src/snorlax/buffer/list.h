@@ -44,6 +44,7 @@ struct buffer_list_func {
     void (*clear)(buffer_list_t *);
     buffer_list_node_t * (*front)(buffer_list_t *);
     buffer_list_node_t * (*back)(buffer_list_t *, uint64_t);
+    buffer_list_node_t * (*head)(buffer_list_t *);
 
     buffer_list_node_t * (*add)(buffer_list_t *, buffer_list_node_t *);
     buffer_list_node_t * (*del)(buffer_list_t *, buffer_list_node_t *);
@@ -57,6 +58,7 @@ extern void buffer_list_func_pop(buffer_list_t * buffer, uint64_t n);
 extern void buffer_list_func_clear(buffer_list_t * buffer);
 extern buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer);
 extern buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64_t hint);
+extern buffer_list_node_t * buffer_list_func_head(buffer_list_t * buffer);
 extern buffer_list_node_t * buffer_list_func_add(buffer_list_t * buffer, buffer_list_node_t * node);
 extern buffer_list_node_t * buffer_list_func_del(buffer_list_t * buffer, buffer_list_node_t * node);
 

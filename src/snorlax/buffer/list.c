@@ -163,6 +163,14 @@ extern buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer) {
     return node;
 }
 
+extern buffer_list_node_t * buffer_list_func_head(buffer_list_t * buffer) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+#endif // RELEASE
+
+    return buffer->head;
+}
+
 extern buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64_t hint) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
