@@ -72,11 +72,11 @@ extern void * buffer_list_node_func_back(buffer_list_node_t * node) {
 }
 
 extern uint64_t buffer_list_node_func_length(buffer_list_node_t * node) {
-#ifndef   RELEASE
-    snorlaxdbg(node == nil, false, "critical", "");
-#endif // RELEASE
+// #ifndef   RELEASE
+//     snorlaxdbg(node == nil, false, "critical", "");
+// #endif // RELEASE
 
-    return node->size - node->position;
+    return node ? node->size - node->position : 0;
 }
 
 extern uint64_t buffer_list_node_func_remain(buffer_list_node_t * node) {
@@ -84,7 +84,7 @@ extern uint64_t buffer_list_node_func_remain(buffer_list_node_t * node) {
     snorlaxdbg(node == nil, false, "critical", "");
 #endif // RELEASE
 
-    return node->capacity - node->size;
+    return node ? node->capacity - node->size : 0;
 }
 
 extern uint64_t buffer_list_node_func_position_get(buffer_list_node_t * node) {

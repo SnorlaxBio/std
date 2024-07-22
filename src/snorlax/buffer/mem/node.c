@@ -73,7 +73,7 @@ static uint64_t buffer_mem_node_func_length(buffer_mem_node_t * node) {
     snorlaxdbg(node == nil, false, "critical", "");
 #endif // RELEASE
 
-    return node->size - node->position;
+    return node ? node->size - node->position : 0;
 }
 
 static uint64_t buffer_mem_node_func_remain(buffer_mem_node_t * node) {
@@ -81,7 +81,7 @@ static uint64_t buffer_mem_node_func_remain(buffer_mem_node_t * node) {
     snorlaxdbg(node == nil, false, "critical", "");
 #endif // RELEASE
 
-    return node->capacity - node->size;
+    return node ? node->capacity - node->size : 0;
 }
 
 static uint64_t buffer_mem_node_func_position_get(buffer_mem_node_t * node) {
