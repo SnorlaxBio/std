@@ -36,6 +36,11 @@ extern buffer_list_node_t * buffer_list_node_gen(buffer_list_t * buffer, const v
 
         memcpy(node->mem, data, n);
         node->size = n;
+    } else if(n > 0) {
+        uint64_t page = buffer->page ? buffer->page : 1;
+        node->capacity = (n / page + 1) * page;
+
+        node->mem = memory_gen(nil, node->capacity); 
     }
 
     return node;
