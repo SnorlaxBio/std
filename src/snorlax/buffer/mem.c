@@ -87,7 +87,7 @@ static buffer_mem_node_t * buffer_mem_func_front(buffer_mem_t * buffer) {
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
 
-    return buffer_node_length(buffer->node) ? buffer->node : nil;
+    return buffer->node;
 }
 
 static buffer_mem_node_t * buffer_mem_func_back(buffer_mem_t * buffer, uint64_t hint) {
