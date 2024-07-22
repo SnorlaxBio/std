@@ -21,7 +21,6 @@ static buffer_list_node_func_t func = {
 extern buffer_list_node_t * buffer_list_node_gen(buffer_list_t * buffer, const void * data, uint64_t n) {
 #ifndef   RELEASE
     snorlaxdbg(buffer == nil, false, "critical", "");
-    snorlaxdbg(n == 0, false, "critical", "");
 #endif // RELEASE
 
     buffer_list_node_t * node = (buffer_list_node_t *) calloc(1, sizeof(buffer_list_node_t));
@@ -41,10 +40,10 @@ extern buffer_list_node_t * buffer_list_node_gen(buffer_list_t * buffer, const v
 
     uint64_t page = buffer->page ? buffer->page : 1;
 
-    node->capacity = (n / page + 1) * page;
-    node->mem = memory_gen(nil, node->capacity);
-
     if(data) {
+        node->capacity = (n / page + 1) * page;
+        node->mem = memory_gen(nil, node->capacity);
+
         memcpy(node->mem, data, n);
         node->size = n;
     }
