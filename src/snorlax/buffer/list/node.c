@@ -123,13 +123,6 @@ extern void buffer_list_node_func_position_set(buffer_list_node_t * node, uint64
 #endif // RELEASE
 
     node->position = v;
-
-    if(node->position == node->size) {
-        node->position = 0;
-        node->size = 0;
-        node->capacity = 0;
-        node->mem = memory_rem(node->mem);
-    }
 }
 
 extern uint64_t buffer_list_node_func_size_get(buffer_list_node_t * node) {
