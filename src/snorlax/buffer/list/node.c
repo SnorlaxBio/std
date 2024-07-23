@@ -7,6 +7,7 @@ static buffer_list_node_func_t func = {
     buffer_list_node_func_rem,
     buffer_list_node_func_front,
     buffer_list_node_func_back,
+    buffer_list_node_func_shrink,
     buffer_list_node_func_length,
     buffer_list_node_func_remain,
     buffer_list_node_func_position_get,
@@ -74,6 +75,21 @@ extern void * buffer_list_node_func_back(buffer_list_node_t * node) {
 #endif // RELEASE
 
     return node->size != node->capacity ? &(((uint8_t *) node->mem)[node->size]) : nil;
+}
+
+extern void buffer_list_node_func_shrink(buffer_list_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    if(node->position == node->size) {
+        buffer_list_del(node->collection, node);
+        buffer_list_node_rem(node);
+
+        return success;
+    }
+
+    return fail;
 }
 
 extern uint64_t buffer_list_node_func_length(buffer_list_node_t * node) {

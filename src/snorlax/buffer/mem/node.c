@@ -6,6 +6,7 @@
 static buffer_mem_node_t * buffer_mem_node_func_rem(buffer_mem_node_t * node);
 static void * buffer_mem_node_func_front(buffer_mem_node_t * node);
 static void * buffer_mem_node_func_back(buffer_mem_node_t * node);
+static int32_t buffer_mem_node_func_shrink(buffer_mem_node_t * node);
 static uint64_t buffer_mem_node_func_length(buffer_mem_node_t * node);
 static uint64_t buffer_mem_node_func_remain(buffer_mem_node_t * node);
 static uint64_t buffer_mem_node_func_position_get(buffer_mem_node_t * node);
@@ -20,6 +21,7 @@ static buffer_mem_node_func_t func = {
     buffer_mem_node_func_rem,
     buffer_mem_node_func_front,
     buffer_mem_node_func_back,
+    buffer_mem_node_func_shrink,
     buffer_mem_node_func_length,
     buffer_mem_node_func_remain,
     buffer_mem_node_func_position_get,
@@ -68,6 +70,23 @@ static void * buffer_mem_node_func_back(buffer_mem_node_t * node) {
     return node->size < node->capacity ? &(((uint8_t *) node->mem)[node->size]) : nil;
 }
 
+static int32_t buffer_mem_node_func_shrink(buffer_mem_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(node == nil, false, "critical", "");
+#endif // RELEASE
+
+    if(node->position == node->size) {
+        node->position = 0;
+        node->size = 0;
+        node->capacity = 0;
+        node->mem = memory_rem(node->mem);
+
+        return success;
+    }
+
+    return fail;
+}
+
 static uint64_t buffer_mem_node_func_length(buffer_mem_node_t * node) {
 #ifndef   RELEASE
     snorlaxdbg(node == nil, false, "critical", "");
@@ -101,13 +120,6 @@ static void buffer_mem_node_func_position_set(buffer_mem_node_t * node, uint64_t
     snorlaxdbg(false, true, "implement", "node->position == node->size: buffer consuming reset buffer");
 
     node->position = v;
-
-    if(node->position == node->size) {
-        node->position = 0;
-        node->size = 0;
-        node->capacity = 0;
-        node->mem = memory_rem(node->mem);
-    }
 }
 
 static uint64_t buffer_mem_node_func_size_get(buffer_mem_node_t * node) {

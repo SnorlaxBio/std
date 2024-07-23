@@ -38,6 +38,7 @@ struct buffer_func {
     void (*push)(buffer_t *, const void *, uint64_t);
     void (*pop)(buffer_t *, uint64_t);
     void (*clear)(buffer_t *);
+    void (*shrink)(buffer_t *);
     buffer_node_t * (*front)(buffer_t *);
     buffer_node_t * (*back)(buffer_t *, uint64_t);
     buffer_node_t * (*head)(buffer_t *);
@@ -47,6 +48,7 @@ struct buffer_func {
 #define buffer_push(buffer, data, n)            ((buffer)->func->push(buffer, data, n))
 #define buffer_pop(buffer, n)                   ((buffer)->func->pop(buffer, n))
 #define buffer_clear(buffer)                    ((buffer)->func->clear(buffer))
+#define buffer_shrink(buffer)                   ((buffer)->func->shrink(buffer))
 #define buffer_front(buffer)                    ((buffer)->func->front(buffer))
 #define buffer_back(buffer, hint)               ((buffer)->func->back(buffer, hint))
 #define buffer_head(buffer)                     ((buffer)->func->head(buffer))
@@ -60,6 +62,7 @@ struct buffer_node_func {
     buffer_node_t * (*rem)(buffer_node_t *);
     void * (*front)(buffer_node_t *);
     void * (*back)(buffer_node_t *);
+    int32_t (*shrink)(buffer_node_t *);
     uint64_t (*length)(buffer_node_t *);
     uint64_t (*remain)(buffer_node_t *);
     uint64_t (*position_get)(buffer_node_t *);
@@ -74,6 +77,7 @@ struct buffer_node_func {
 #define buffer_node_rem(node)                   ((node)->func->rem(node))
 #define buffer_node_front(node)                 ((node)->func->front(node))
 #define buffer_node_back(node)                  ((node)->func->back(node))
+#define buffer_node_shrink(node)                ((node)->func->shrink(node))
 #define buffer_node_length(node)                ((node) ? (node)->func->length(node) : 0)
 #define buffer_node_remain(node)                ((node) ? (node)->func->remain(node) : 0)
 #define buffer_node_position_get(node)          ((node)->func->position_get(node))

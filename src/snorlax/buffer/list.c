@@ -12,6 +12,7 @@ static buffer_list_func_t func = {
     buffer_list_func_push,
     buffer_list_func_pop,
     buffer_list_func_clear,
+    buffer_list_func_shrink,
     buffer_list_func_front,
     buffer_list_func_back,
     buffer_list_func_head,
@@ -148,6 +149,19 @@ extern void buffer_list_func_clear(buffer_list_t * buffer) {
     buffer->tail = nil;
     buffer->size = 0;
     buffer->front = nil;
+}
+
+extern void buffer_list_func_shrink(buffer_list_t * buffer) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+#endif // RELEASE
+
+    while(buffer->head) {
+        if(buffer_list_node_shrink(buffer->head) == success) {
+            continue;
+        }
+        break;
+    }
 }
 
 extern buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer) {

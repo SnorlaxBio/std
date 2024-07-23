@@ -42,6 +42,7 @@ struct buffer_list_func {
     void (*push)(buffer_list_t *, const void *, uint64_t);
     void (*pop)(buffer_list_t *, uint64_t);
     void (*clear)(buffer_list_t *);
+    void (*shrink)(buffer_list_t *);
     buffer_list_node_t * (*front)(buffer_list_t *);
     buffer_list_node_t * (*back)(buffer_list_t *, uint64_t);
     buffer_list_node_t * (*head)(buffer_list_t *);
@@ -56,6 +57,7 @@ extern buffer_list_t * buffer_list_func_rem(buffer_list_t * buffer);
 extern void buffer_list_func_push(buffer_list_t * buffer, const void * data, uint64_t n);
 extern void buffer_list_func_pop(buffer_list_t * buffer, uint64_t n);
 extern void buffer_list_func_clear(buffer_list_t * buffer);
+extern void buffer_list_func_shrink(buffer_list_t * buffer);
 extern buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer);
 extern buffer_list_node_t * buffer_list_func_back(buffer_list_t * buffer, uint64_t hint);
 extern buffer_list_node_t * buffer_list_func_head(buffer_list_t * buffer);
@@ -89,6 +91,7 @@ struct buffer_list_node_func {
     buffer_list_node_t * (*rem)(buffer_list_node_t *);
     void * (*front)(buffer_list_node_t *);
     void * (*back)(buffer_list_node_t *);
+    int32_t (*shrink)(buffer_list_node_t *);
     uint64_t (*length)(buffer_list_node_t *);
     uint64_t (*remain)(buffer_list_node_t *);
     uint64_t (*position_get)(buffer_list_node_t *);
@@ -105,6 +108,7 @@ extern buffer_list_node_t * buffer_list_node_gen(buffer_list_t * buffer, const v
 extern buffer_list_node_t * buffer_list_node_func_rem(buffer_list_node_t * node);
 extern void * buffer_list_node_func_front(buffer_list_node_t * node);
 extern void * buffer_list_node_func_back(buffer_list_node_t * node);
+extern int32_t buffer_list_node_func_shrink(buffer_list_node_t * node);
 extern uint64_t buffer_list_node_func_length(buffer_list_node_t * node);
 extern uint64_t buffer_list_node_func_remain(buffer_list_node_t * node);
 extern uint64_t buffer_list_node_func_position_get(buffer_list_node_t * node);
@@ -118,6 +122,7 @@ extern void buffer_list_node_func_clear(buffer_list_node_t * node);
 #define buffer_list_node_rem(node)                  ((node)->func->rem(node))
 #define buffer_list_node_front(node)                ((node)->func->front(node))
 #define buffer_list_node_back(node)                 ((node)->func->back(node))
+#define buffer_list_node_shrink(node)               ((node)->func->shrink(node))
 #define buffer_list_node_length(node)               ((node) ? (node)->func->length(node) : 0)
 #define buffer_list_node_remain(node)               ((node) ? (node)->func->remain(node) : 0)
 #define buffer_list_node_position_get(node)         ((node)->func->position_get(node))

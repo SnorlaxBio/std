@@ -9,6 +9,7 @@ static buffer_mem_t * buffer_mem_func_rem(buffer_mem_t * buffer);
 static void buffer_mem_func_push(buffer_mem_t * buffer, const void * data, uint64_t n);
 static void buffer_mem_func_pop(buffer_mem_t * buffer, uint64_t n);
 static void buffer_mem_func_clear(buffer_mem_t * buffer);
+static void buffer_mem_func_shrink(buffer_mem_t * buffer);
 static buffer_mem_node_t * buffer_mem_func_front(buffer_mem_t * buffer);
 static buffer_mem_node_t * buffer_mem_func_back(buffer_mem_t * buffer, uint64_t hint);
 static buffer_mem_node_t * buffer_mem_func_head(buffer_mem_t * buffer);
@@ -18,6 +19,7 @@ static buffer_mem_func_t func = {
     buffer_mem_func_push,
     buffer_mem_func_pop,
     buffer_mem_func_clear,
+    buffer_mem_func_shrink,
     buffer_mem_func_front,
     buffer_mem_func_back,
     buffer_mem_func_head
@@ -82,6 +84,14 @@ static void buffer_mem_func_clear(buffer_mem_t * buffer) {
 #endif // RELEASE
 
     buffer_node_clear(buffer->node);
+}
+
+static void buffer_mem_func_shrink(buffer_mem_t * buffer) {
+#ifndef   RELEASE
+    snorlaxdbg(buffer == nil, false, "critical", "");
+#endif // RELEASE
+
+    buffer_node_shrink(buffer->node);
 }
 
 static buffer_mem_node_t * buffer_mem_func_front(buffer_mem_t * buffer) {
