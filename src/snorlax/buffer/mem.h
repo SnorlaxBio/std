@@ -65,7 +65,7 @@ struct buffer_mem_node_func {
     buffer_mem_node_t * (*rem)(buffer_mem_node_t *);
     void * (*front)(buffer_mem_node_t *);
     void * (*back)(buffer_mem_node_t *);
-    int32_t (*shrink)(buffer_node_t *);
+    int32_t (*shrink)(buffer_mem_node_t *);
     uint64_t (*length)(buffer_mem_node_t *);
     uint64_t (*remain)(buffer_mem_node_t *);
     uint64_t (*position_get)(buffer_mem_node_t *);

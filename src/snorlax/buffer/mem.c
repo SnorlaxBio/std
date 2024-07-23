@@ -91,7 +91,7 @@ static void buffer_mem_func_shrink(buffer_mem_t * buffer) {
     snorlaxdbg(buffer == nil, false, "critical", "");
 #endif // RELEASE
 
-    buffer_node_shrink(buffer->node);
+    buffer_mem_node_shrink(buffer->node);
 }
 
 static buffer_mem_node_t * buffer_mem_func_front(buffer_mem_t * buffer) {

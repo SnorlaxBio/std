@@ -77,7 +77,7 @@ extern void * buffer_list_node_func_back(buffer_list_node_t * node) {
     return node->size != node->capacity ? &(((uint8_t *) node->mem)[node->size]) : nil;
 }
 
-extern void buffer_list_node_func_shrink(buffer_list_node_t * node) {
+extern int32_t buffer_list_node_func_shrink(buffer_list_node_t * node) {
 #ifndef   RELEASE
     snorlaxdbg(node == nil, false, "critical", "");
 #endif // RELEASE
