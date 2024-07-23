@@ -155,9 +155,11 @@ extern buffer_list_node_t * buffer_list_func_front(buffer_list_t * buffer) {
 #endif // RELEASE
 
     buffer_list_node_t * node = buffer->front ? buffer->front : buffer->head;
+
     while(node && buffer_list_node_position_get(node) == buffer_list_node_size_get(node)) {
         node = node->next;
     }
+    
     buffer->front = node;
 
     return node;
