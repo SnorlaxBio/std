@@ -14,6 +14,7 @@ static buffer_list_func_t func = {
     buffer_list_func_clear,
     buffer_list_func_front,
     buffer_list_func_back,
+    buffer_list_func_head,
     buffer_list_func_add,
     buffer_list_func_del
 };
