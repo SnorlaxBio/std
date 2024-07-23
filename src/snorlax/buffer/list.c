@@ -248,6 +248,8 @@ extern buffer_list_node_t * buffer_list_func_del(buffer_list_t * buffer, buffer_
         buffer->tail = prev;
     }
 
+    if(buffer->front == node) buffer->front = next;
+
     buffer->size = buffer->size - 1;
     node->collection = nil;
 
