@@ -27,7 +27,7 @@
 
 #define ___notused(v)               ((void)(v))
 
-typedef void *                      address_t;
+typedef void *                      address_t;      // TODO: 이름이 마음에 들지 않는다.
 
 #define success                     0
 #define fail                        (-1)
