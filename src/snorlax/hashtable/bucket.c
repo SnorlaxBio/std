@@ -70,9 +70,15 @@ extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket,
 
     if(list == nil) bucket->container[index] = list = hashtable_list_gen();
 
-    hashtable_list_push(list, node);
+    hashtable_node_t * found = hashtable_list_get(list, address_of(node->key));
 
-    return node;
+    if(found) {
+        hashtable_list_replace(list, found, node);
+    } else {
+        hashtable_list_push(list, node);
+    }
+    
+    return found;
 }
 
 extern hashtable_node_t * hashtable_bucket_func_del(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint64_t v) {

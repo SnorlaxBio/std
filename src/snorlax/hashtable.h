@@ -71,11 +71,12 @@ extern int32_t hashtable_func_shrink(hashtable_t * collection);
 #define hashtable_shrink(collection)                        ((collection)->func->shrink(collection))
 
 #define hashtable_bucket_exponent_initial                   2
-#define hashtable_bucket_rehash_threshold                   64
+#define hashtable_bucket_rehash_move_max                    64
 
 #define hashtable_bucket_size_cal(bucket)                   (1 << (bucket)->exponent)
 #define hashtable_bucket_size_mask_cal(bucket)              (hashtable_bucket_size_cal(bucket) - 1)
 #define hashtable_bucket_index_cal(bucket, v)               ((v) & hashtable_bucket_size_cal(bucket))
+#define hashtable_bucket_rehash_threshold_cal(bucket)       (hashtable_bucket_size_cal(bucket) * 2)
 
 struct hashtable_bucket {
     hashtable_bucket_func_t * func;
@@ -126,6 +127,7 @@ struct hashtable_list_func {
     hashtable_node_t * (*get)(hashtable_list_t *, hashtable_node_key_t *);
     hashtable_node_t * (*del)(hashtable_list_t *, hashtable_node_t *);
     void (*push)(hashtable_list_t *, hashtable_node_t *);
+    void (*replace)(hashtable_list_t *, hashtable_node_t *, hashtable_node_t *);
 };
 
 extern hashtable_list_t * hashtable_list_gen(void);
@@ -134,13 +136,15 @@ extern hashtable_list_t * hashtable_list_func_rem(hashtable_list_t * list);
 extern hashtable_node_t * hashtable_list_func_get(hashtable_list_t * list, hashtable_node_key_t * key);
 extern hashtable_node_t * hashtable_list_func_del(hashtable_list_t * list, hashtable_node_t * node);
 extern void hashtable_list_func_push(hashtable_list_t * list, hashtable_node_t * node);
+extern void hashtable_list_func_replace(hashtable_list_t * list, hashtable_node_t * original, hashtable_node_t * node);
 
-#define hashtable_list_rem(collection)              ((collection)->func->rem(collection))
-#define hashtable_list_get(collection, key)         ((collection)->func->get(collection, key))
-#define hashtable_list_del(collection, node)        ((collection)->func->del(collection, node))
-#define hashtable_list_push(collection, node)       ((collection)->func->push(collection, node))
+#define hashtable_list_rem(collection)                          ((collection)->func->rem(collection))
+#define hashtable_list_get(collection, key)                     ((collection)->func->get(collection, key))
+#define hashtable_list_del(collection, node)                    ((collection)->func->del(collection, node))
+#define hashtable_list_push(collection, node)                   ((collection)->func->push(collection, node))
+#define hashtable_list_replace(collection, original, node)      ((collection)->func->replace(collection, original, node))
 
-#define hashtable_list_begin(collection)            ((collection)->head)
+#define hashtable_list_begin(collection)                        ((collection)->head)
 
 struct hashtable_node_key {
     void * value;

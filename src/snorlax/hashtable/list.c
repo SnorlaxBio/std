@@ -7,7 +7,8 @@ static hashtable_list_func_t func = {
     hashtable_list_func_rem,
     hashtable_list_func_get,
     hashtable_list_func_del,
-    hashtable_list_func_push
+    hashtable_list_func_push,
+    hashtable_list_func_replace
 };
 
 extern hashtable_list_t * hashtable_list_gen(void) {
@@ -98,4 +99,21 @@ extern void hashtable_list_func_push(hashtable_list_t * list, hashtable_node_t *
     list->tail = node;
     list->size = list->size + 1;
     node->collection = list;
+}
+
+extern void hashtable_list_func_replace(hashtable_list_t * list, hashtable_node_t * original, hashtable_node_t * node) {
+#ifndef   RELEASE
+    snorlaxdbg(list == nil, false, "critical", "");
+    snorlaxdbg(original == nil, false, "critical", "");
+    snorlaxdbg(node == nil, false, "critical", "");
+    snorlaxdbg(original->collection != list, false, "critical", "");
+#endif // RELEASE
+
+    node->prev = original->prev;
+    node->next = original->next;
+    node->collection = original->collection;
+
+    original->collection = nil;
+    original->prev = nil;
+    original->next = nil;
 }

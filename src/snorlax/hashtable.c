@@ -75,6 +75,12 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 
     hashtable_bucket_set(collection->front, key, v, node);
 
+    collection->size = collection->front->size + (collection->back ? collection->back->size : 0);
+
+    if(hashtable_bucket_rehash_threshold_cal(collection->front) <= collection->size) {
+        hashtable_expand(collection);
+    }
+
     hashtable_shrink(collection);
 
     return node;
@@ -125,7 +131,7 @@ extern int32_t hashtable_func_shrink(hashtable_t * collection) {
 #endif // RELEASE
 
     if(collection->back) {
-        collection->moved = hashtable_bucket_move(collection->front, collection->back, hashtable_bucket_rehash_threshold, collection->hash, collection->moved);
+        collection->moved = hashtable_bucket_move(collection->front, collection->back, hashtable_bucket_rehash_move_max, collection->hash, collection->moved);
 
         if(hashtable_bucket_size_get(collection->back) == 0) {
             collection->back = hashtable_bucket_rem(collection->back);
