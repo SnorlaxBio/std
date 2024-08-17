@@ -40,7 +40,7 @@ static inline uint32_t get_unaligned_cpu32(const uint8_t * p) {
     return o->x;
 }
 
-extern uint32_t jenkins_hash(uint8_t * values, uint64_t n) {
+extern uint32_t jenkins_hash(const uint8_t * values, uint64_t n) {
     uint32_t first = 0;
     uint32_t second = 0;
     uint32_t third = 0;

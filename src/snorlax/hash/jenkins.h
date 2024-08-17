@@ -35,6 +35,6 @@
 #include <snorlax.h>
 #include <snorlax/bit.h>
 
-extern uint32_t jenkins_hash(uint8_t * values, uint64_t n);
+extern uint32_t jenkins_hash(const uint8_t * values, uint64_t n);
 
 #endif // __SNORLAX__HASH_JENKINS__H__
