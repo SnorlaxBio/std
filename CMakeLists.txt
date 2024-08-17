@@ -24,7 +24,8 @@ set(SNORLAX_STD_SOURCE      src/snorlax.c
                             src/snorlax/hashtable.c
                             src/snorlax/hashtable/bucket.c
                             src/snorlax/hashtable/list.c
-                            src/snorlax/hashtable/node.c)
+                            src/snorlax/hashtable/node.c
+                            src/snorlax/hash/jenkins.c)
 
 set(SNORLAX_STD_HEADER      src/snorlax.h
                             src/snorlax/thread.h
@@ -37,7 +38,9 @@ set(SNORLAX_STD_HEADER      src/snorlax.h
                             src/snorlax/buffer/mem.h
                             src/snorlax/buffer/list.h
                             src/snorlax/nanosecond.h
-                            src/snorlax/hashtable.h)
+                            src/snorlax/hashtable.h
+                            src/snorlax/hash/jenkins.h
+                            src/snorlax/hash.h)
 
 add_library(snorlax-std ${SNORLAX_STD_SOURCE}
                         ${SNORLAX_STD_HEADER})

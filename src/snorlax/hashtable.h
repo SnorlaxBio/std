@@ -32,7 +32,7 @@ typedef struct hashtable_node hashtable_node_t;
 typedef struct hashtable_node_func hashtable_node_func_t;
 typedef struct hashtable_node_key hashtable_node_key_t;
 
-typedef uint64_t (*hash_t)(const hashtable_node_key_t *);
+typedef uint32_t (*hash_t)(const uint8_t * key, uint64_t n);
 
 struct hashtable {
     hashtable_func_t * func;
@@ -88,21 +88,21 @@ struct hashtable_bucket {
 
 struct hashtable_bucket_func {
     hashtable_bucket_t * (*rem)(hashtable_bucket_t *);
-    hashtable_node_t * (*get)(hashtable_bucket_t *, hashtable_node_key_t *, uint64_t);
-    hashtable_node_t * (*set)(hashtable_bucket_t *, hashtable_node_key_t *, uint64_t, hashtable_node_t *);
-    hashtable_node_t * (*del)(hashtable_bucket_t *, hashtable_node_key_t *, uint64_t);
-    hashtable_list_t * (*list)(hashtable_bucket_t *, uint64_t, int32_t);
-    uint64_t (*move)(hashtable_bucket_t *, hashtable_bucket_t *, uint64_t, hash_t, uint64_t);
+    hashtable_node_t * (*get)(hashtable_bucket_t *, hashtable_node_key_t *, uint32_t);
+    hashtable_node_t * (*set)(hashtable_bucket_t *, hashtable_node_key_t *, uint32_t, hashtable_node_t *);
+    hashtable_node_t * (*del)(hashtable_bucket_t *, hashtable_node_key_t *, uint32_t);
+    hashtable_list_t * (*list)(hashtable_bucket_t *, uint32_t, int32_t);
+    uint32_t (*move)(hashtable_bucket_t *, hashtable_bucket_t *, uint64_t, hash_t, uint32_t);
 };
 
 extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent);
 
 extern hashtable_bucket_t * hashtable_bucket_func_rem(hashtable_bucket_t * bucket);
-extern hashtable_node_t * hashtable_bucket_func_get(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint64_t v);
-extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint64_t v, hashtable_node_t * node);
-extern hashtable_node_t * hashtable_bucket_func_del(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint64_t v);
-extern hashtable_list_t * hashtable_bucket_func_list(hashtable_bucket_t * bucket, uint64_t v, int32_t gen);
-extern uint64_t hashtable_bucket_func_move(hashtable_bucket_t * bucket, hashtable_bucket_t * back, uint64_t threshold, hash_t hash, uint64_t last);
+extern hashtable_node_t * hashtable_bucket_func_get(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint32_t v);
+extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint32_t v, hashtable_node_t * node);
+extern hashtable_node_t * hashtable_bucket_func_del(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint32_t v);
+extern hashtable_list_t * hashtable_bucket_func_list(hashtable_bucket_t * bucket, uint32_t v, int32_t gen);
+extern uint32_t hashtable_bucket_func_move(hashtable_bucket_t * bucket, hashtable_bucket_t * back, uint64_t threshold, hash_t hash, uint32_t last);
 
 #define hashtable_bucket_rem(bucket)                                    ((bucket)->func->rem(bucket))
 #define hashtable_bucket_get(bucket, key, v)                            ((bucket)->func->get(bucket, key, v))

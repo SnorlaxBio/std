@@ -47,7 +47,7 @@ extern hashtable_node_t * hashtable_func_get(hashtable_t * collection, hashtable
     snorlaxdbg(collection == nil, false, "critical", "");
     snorlaxdbg(key == nil, false, "critical", "");
 #endif // RELEASE
-    uint64_t v = collection->hash(key);
+    uint64_t v = collection->hash(key->value, key->length);
     hashtable_node_t * node = hashtable_bucket_get(collection->front, key, v);
 
     if(node == nil) {
@@ -71,7 +71,7 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 
     hashtable_node_key_t * key = address_of(node->key);
 
-    uint64_t v = collection->hash(key);
+    uint64_t v = collection->hash(key->value, key->length);
 
     hashtable_bucket_set(collection->front, key, v, node);
 
@@ -92,7 +92,7 @@ extern hashtable_node_t * hashtable_func_del(hashtable_t * collection, hashtable
     snorlaxdbg(key == nil, false, "critical", "");
 #endif // RELEASE
 
-    uint64_t v = collection->hash(key);
+    uint64_t v = collection->hash(key->value, key->length);
 
     hashtable_node_t * node = hashtable_bucket_del(collection->front, key, v);
 

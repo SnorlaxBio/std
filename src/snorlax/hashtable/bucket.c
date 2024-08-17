@@ -40,7 +40,7 @@ extern hashtable_bucket_t * hashtable_bucket_func_rem(hashtable_bucket_t * bucke
     return nil;
 }
 
-extern hashtable_node_t * hashtable_bucket_func_get(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint64_t v) {
+extern hashtable_node_t * hashtable_bucket_func_get(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint32_t v) {
 #ifndef   RELEASE
     snorlaxdbg(bucket == nil, false, "critical", "");
     snorlaxdbg(key == nil, false, "critical", "");
@@ -57,7 +57,7 @@ extern hashtable_node_t * hashtable_bucket_func_get(hashtable_bucket_t * bucket,
     return node;
 }
 
-extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint64_t v, hashtable_node_t * node) {
+extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint32_t v, hashtable_node_t * node) {
 #ifndef   RELEASE
     snorlaxdbg(bucket == nil, false, "critical", "");
     snorlaxdbg(key == nil, false, "critical", "");
@@ -81,7 +81,7 @@ extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket,
     return found;
 }
 
-extern hashtable_node_t * hashtable_bucket_func_del(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint64_t v) {
+extern hashtable_node_t * hashtable_bucket_func_del(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint32_t v) {
 #ifndef   RELEASE
     snorlaxdbg(bucket == nil, false, "critical", "");
     snorlaxdbg(key == nil, false, "critical", "");
@@ -98,7 +98,7 @@ extern hashtable_node_t * hashtable_bucket_func_del(hashtable_bucket_t * bucket,
     return node;
 }
 
-extern hashtable_list_t * hashtable_bucket_func_list(hashtable_bucket_t * bucket, uint64_t v, int32_t gen) {
+extern hashtable_list_t * hashtable_bucket_func_list(hashtable_bucket_t * bucket, uint32_t v, int32_t gen) {
 #ifndef   RELEASE
     snorlaxdbg(bucket == nil, false, "critical", "");
 #endif // RELEASE
@@ -112,7 +112,7 @@ extern hashtable_list_t * hashtable_bucket_func_list(hashtable_bucket_t * bucket
     return list;
 }
 
-extern uint64_t hashtable_bucket_func_move(hashtable_bucket_t * bucket, hashtable_bucket_t * back, uint64_t threshold, hash_t hash, uint64_t last) {
+extern uint32_t hashtable_bucket_func_move(hashtable_bucket_t * bucket, hashtable_bucket_t * back, uint64_t threshold, hash_t hash, uint32_t last) {
 #ifndef   RELEASE
     snorlaxdbg(bucket == nil, false, "critical", "");
     snorlaxdbg(back == nil, false, "critical", "");
@@ -120,14 +120,14 @@ extern uint64_t hashtable_bucket_func_move(hashtable_bucket_t * bucket, hashtabl
 
     hashtable_list_t * list = nil;
 
-    uint64_t index = last;
+    uint32_t index = last;
 
     while((list = back->container[index]) && threshold > 0) {
         hashtable_node_t * node = nil;
         while((node = hashtable_list_begin(list)) && threshold > 0) {
             hashtable_list_del(list, node);
             hashtable_node_key_t * key = address_of(node->key);
-            uint64_t v = hash(key);
+            uint32_t v = hash(key->value, key->length);
             hashtable_bucket_set(bucket, key, v, node);
             threshold = threshold - 1;
         }
