@@ -113,6 +113,18 @@ extern void hashtable_list_func_replace(hashtable_list_t * list, hashtable_node_
     node->next = original->next;
     node->collection = original->collection;
 
+    if(original->prev) {
+        original->prev->next = node;
+    } else {
+        original->collection->head = node;
+    }
+
+    if(original->next) {
+        original->next->prev = node;
+    } else {
+        original->collection->tail = node;
+    }
+
     original->collection = nil;
     original->prev = nil;
     original->next = nil;
