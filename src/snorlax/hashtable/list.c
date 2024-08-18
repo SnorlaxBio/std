@@ -106,7 +106,7 @@ extern void hashtable_list_func_replace(hashtable_list_t * list, hashtable_node_
     snorlaxdbg(list == nil, false, "critical", "");
     snorlaxdbg(original == nil, false, "critical", "");
     snorlaxdbg(node == nil, false, "critical", "");
-    snorlaxdbg(original->collection != list, false, "critical", "");
+    snorlaxdbg(original->collection != list, false, "critical", "%p = %p", original->collection, list);
 #endif // RELEASE
 
     node->prev = original->prev;
