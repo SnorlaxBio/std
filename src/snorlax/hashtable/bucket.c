@@ -76,6 +76,14 @@ extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket,
 
     if(found) {
         hashtable_list_replace(list, found, node);
+        snorlaxdbg(false, true, "debug", "node => %p", node);
+        snorlaxdbg(false, true, "debug", "node->collection => %p", node->collection);
+        snorlaxdbg(false, true, "debug", "node->prev => %p", node->prev);
+        snorlaxdbg(false, true, "debug", "node->next => %p", node->next);
+        snorlaxdbg(false, true, "debug", "found => %p", found);
+        snorlaxdbg(false, true, "debug", "found->collection => %p", found->collection);
+        snorlaxdbg(false, true, "debug", "found->prev => %p", found->prev);
+        snorlaxdbg(false, true, "debug", "found->next => %p", found->next);
     } else {
         hashtable_list_push(list, node);
     }
