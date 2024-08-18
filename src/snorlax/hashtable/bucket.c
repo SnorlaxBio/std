@@ -72,6 +72,8 @@ extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket,
 
     hashtable_node_t * found = hashtable_list_get(list, address_of(node->key));
 
+    snorlaxdbg(false, true, "debug", "found => %p", found);
+
     if(found) {
         hashtable_list_replace(list, found, node);
     } else {
