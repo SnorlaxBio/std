@@ -68,7 +68,7 @@ extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket,
 
     hashtable_list_t * list = bucket->container[index];
 
-    if(list == nil) bucket->container[index] = list = hashtable_list_gen();
+    if(list == nil) bucket->container[index] = (list = hashtable_list_gen());
 
     hashtable_node_t * found = hashtable_list_get(list, address_of(node->key));
 
