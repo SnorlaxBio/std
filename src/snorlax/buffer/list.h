@@ -51,7 +51,7 @@ struct buffer_list_func {
     buffer_list_node_t * (*del)(buffer_list_t *, buffer_list_node_t *);
 };
 
-extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, int64_t page);
+extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, uint64_t page);
 
 extern buffer_list_t * buffer_list_func_rem(buffer_list_t * buffer);
 extern void buffer_list_func_push(buffer_list_t * buffer, const void * data, uint64_t n);

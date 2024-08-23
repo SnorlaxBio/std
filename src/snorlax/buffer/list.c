@@ -20,7 +20,7 @@ static buffer_list_func_t func = {
     buffer_list_func_del
 };
 
-extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, int64_t page) {
+extern buffer_list_t * buffer_list_gen(buffer_list_node_factory_t nodegen, uint64_t page) {
     buffer_list_t * buffer = (buffer_list_t *) calloc(1, sizeof(buffer_list_t));
 
     buffer->func = address_of(func);
