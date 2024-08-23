@@ -25,6 +25,7 @@
 #define ___sync
 #define ___notsync
 #define ___reference
+#define ___implement
 
 #define ___notused(v)               ((void)(v))
 
