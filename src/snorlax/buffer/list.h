@@ -103,21 +103,21 @@ struct buffer_list_node_func {
     void (*clear)(buffer_list_node_t *);
 };
 
-extern buffer_list_node_t * buffer_list_node_gen(buffer_list_t * buffer, const void * data, uint64_t n);
+___public extern buffer_list_node_t * buffer_list_node_gen(buffer_list_t * buffer, const void * data, uint64_t n);
 
-extern buffer_list_node_t * buffer_list_node_func_rem(buffer_list_node_t * node);
-extern void * buffer_list_node_func_front(buffer_list_node_t * node);
-extern void * buffer_list_node_func_back(buffer_list_node_t * node);
-extern int32_t buffer_list_node_func_shrink(buffer_list_node_t * node);
-extern uint64_t buffer_list_node_func_length(buffer_list_node_t * node);
-extern uint64_t buffer_list_node_func_remain(buffer_list_node_t * node);
-extern uint64_t buffer_list_node_func_position_get(buffer_list_node_t * node);
-extern void buffer_list_node_func_position_set(buffer_list_node_t * node, uint64_t v);
-extern uint64_t buffer_list_node_func_size_get(buffer_list_node_t * node);
-extern void buffer_list_node_func_size_set(buffer_list_node_t * node, uint64_t v);
-extern uint64_t buffer_list_node_func_capacity_get(buffer_list_node_t * node);
-extern void buffer_list_node_func_capacity_set(buffer_list_node_t * node, uint64_t v);
-extern void buffer_list_node_func_clear(buffer_list_node_t * node);
+___public extern buffer_list_node_t * buffer_list_node_func_rem(buffer_list_node_t * node);
+___public extern void * buffer_list_node_func_front(buffer_list_node_t * node);
+___public extern void * buffer_list_node_func_back(buffer_list_node_t * node);
+___public extern int32_t buffer_list_node_func_shrink(buffer_list_node_t * node);
+___public extern uint64_t buffer_list_node_func_length(buffer_list_node_t * node);
+___public extern uint64_t buffer_list_node_func_remain(buffer_list_node_t * node);
+___public extern uint64_t buffer_list_node_func_position_get(buffer_list_node_t * node);
+___public extern void buffer_list_node_func_position_set(buffer_list_node_t * node, uint64_t v);
+___public extern uint64_t buffer_list_node_func_size_get(buffer_list_node_t * node);
+___public extern void buffer_list_node_func_size_set(buffer_list_node_t * node, uint64_t v);
+___public extern uint64_t buffer_list_node_func_capacity_get(buffer_list_node_t * node);
+___public extern void buffer_list_node_func_capacity_set(buffer_list_node_t * node, uint64_t v);
+___public extern void buffer_list_node_func_clear(buffer_list_node_t * node);
 
 #define buffer_list_node_rem(node)                  ((node)->func->rem(node))
 #define buffer_list_node_front(node)                ((node)->func->front(node))
