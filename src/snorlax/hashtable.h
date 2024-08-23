@@ -147,7 +147,7 @@ extern void hashtable_list_func_replace(hashtable_list_t * list, hashtable_node_
 #define hashtable_list_begin(collection)                        ((collection)->head)
 
 struct hashtable_node_key {
-    void * value;
+    uint8_t * value;
     uint64_t length;
 };
 
