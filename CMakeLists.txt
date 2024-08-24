@@ -8,6 +8,7 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DSNORLAX_DEBUG")
 include_directories(src)
 
 set(SNORLAX_STD_SOURCE      src/snorlax.c
+                            src/snorlax/object.c
                             src/snorlax/thread.c
                             src/snorlax/sync.c
                             src/snorlax/random.c
