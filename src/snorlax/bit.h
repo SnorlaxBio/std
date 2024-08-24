@@ -12,4 +12,9 @@
 
 #define rotate_left32(value, shift)         ((value << shift) | (value >> ((-shift) & 31)));
 
+/**
+ * (x + y > 0xFFFFFFFFu) => x > 0xFFFFFFFFu - y
+ */
+#define overflow_u32_check(x, y)            ((x) > (0xFFFFFFFFu - (y)))
+
 #endif // __SNORLAX__BIT__H__
