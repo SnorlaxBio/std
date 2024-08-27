@@ -27,6 +27,8 @@
 #define ___reference
 #define ___implement
 #define ___pure
+#define ___virtual
+#define ___extend(o)
 
 #define ___notused(v)               ((void)(v))
 
