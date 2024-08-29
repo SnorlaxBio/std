@@ -30,6 +30,10 @@
 #define ___virtual
 #define ___extend(o)
 
+#define ___must                     true
+#define ___should                   true
+#define ___may                      false
+
 #define ___notused(v)               ((void)(v))
 
 typedef void *                      address_t;      // TODO: 이름이 마음에 들지 않는다.
