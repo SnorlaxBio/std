@@ -6,7 +6,7 @@
  * 필요할 때만 필요한 만큼 사용한다.
  * 적은 바이트에 대해서 메모리 할당이 일어나지 않도록 한다.
  * 
- * @author      snorlax <ceo@snorlax.bio>
+ * @author      snorlax <opuntia@snorlax.bio>
  * @since       June 13, 2024
  */
 

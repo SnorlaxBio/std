@@ -3,7 +3,7 @@
 //  * @brief
 //  * @details
 //  * 
-//  * @author      snorlax <ceo@snorlax.bio>
+//  * @author      snorlax <opuntia@snorlax.bio>
 //  * @since       June 17, 2024
 //  * 
 //  * @todo        업그레이드 하자.
