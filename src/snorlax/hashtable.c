@@ -21,7 +21,7 @@ extern hashtable_t * hashtable_gen(hash_t hash) {
     collection->func = address_of(func);
     collection->hash = hash;
 
-    collection->front = hashtable_bucket_gen(hashtable_bucket_exponent_initial);
+    collection->front = hashtable_bucket_gen(hashtable_bucket_exponent_initial, collection);
 
     return collection;
 }
@@ -67,15 +67,24 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 #ifndef   RELEASE
     snorlaxdbg(collection == nil, false, "critical", "");
     snorlaxdbg(node == nil, false, "critical", "");
+    snorlaxdbg(node->list != nil, false, "critical", "");
 #endif // RELEASE
 
     hashtable_node_key_t * key = address_of(node->key);
 
     uint64_t v = collection->hash(key->value, key->length);
 
-    hashtable_node_t * found = hashtable_bucket_set(collection->front, key, v, node);
+    hashtable_node_t * found = hashtable_get(collection, key);
 
-    collection->size = collection->front->size + (collection->back ? collection->back->size : 0);
+    if(found) {
+        hashtable_list_replace(node->list, found, node);
+
+        return found;
+    }
+    
+    found = hashtable_bucket_set(collection->front, key, v, node);
+
+    snorlaxdbg(found != nil, false, "critical", "");
 
     if(hashtable_bucket_rehash_threshold_cal(collection->front) <= collection->size) {
         hashtable_expand(collection);
@@ -83,7 +92,7 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 
     hashtable_shrink(collection);
 
-    return found;
+    return nil;
 }
 
 extern hashtable_node_t * hashtable_func_del(hashtable_t * collection, hashtable_node_key_t * key) {
@@ -115,7 +124,7 @@ extern int32_t hashtable_func_expand(hashtable_t * collection) {
     if(collection->back == nil) {
         collection->back = collection->front;
 
-        collection->front = hashtable_bucket_gen((collection->front->exponent = collection->front->exponent + 1));
+        collection->front = hashtable_bucket_gen((collection->front->exponent = collection->front->exponent + 1), collection);
 
         hashtable_shrink(collection);
 

@@ -84,6 +84,7 @@ struct hashtable_bucket {
     uint64_t size;
     uint8_t exponent;
     hashtable_list_t ** container;
+    hashtable_t * collection;
 };
 
 struct hashtable_bucket_func {
@@ -95,7 +96,7 @@ struct hashtable_bucket_func {
     uint32_t (*move)(hashtable_bucket_t *, hashtable_bucket_t *, uint64_t, hash_t, uint32_t);
 };
 
-extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent);
+extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent, hashtable_t * collection);
 
 extern hashtable_bucket_t * hashtable_bucket_func_rem(hashtable_bucket_t * bucket);
 extern hashtable_node_t * hashtable_bucket_func_get(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint32_t v);
@@ -120,27 +121,29 @@ struct hashtable_list {
     uint64_t size;
     hashtable_node_t * head;
     hashtable_node_t * tail;
+
+    hashtable_bucket_t * bucket;
 };
 
 struct hashtable_list_func {
     hashtable_list_t * (*rem)(hashtable_list_t *);
     hashtable_node_t * (*get)(hashtable_list_t *, hashtable_node_key_t *);
-    hashtable_node_t * (*del)(hashtable_list_t *, hashtable_node_t *);
+    hashtable_node_t * (*del)(hashtable_list_t *, hashtable_node_key_t *);
     void (*push)(hashtable_list_t *, hashtable_node_t *);
     void (*replace)(hashtable_list_t *, hashtable_node_t *, hashtable_node_t *);
 };
 
-extern hashtable_list_t * hashtable_list_gen(void);
+extern hashtable_list_t * hashtable_list_gen(hashtable_bucket_t * bucket);
 
 extern hashtable_list_t * hashtable_list_func_rem(hashtable_list_t * list);
 extern hashtable_node_t * hashtable_list_func_get(hashtable_list_t * list, hashtable_node_key_t * key);
-extern hashtable_node_t * hashtable_list_func_del(hashtable_list_t * list, hashtable_node_t * node);
+extern hashtable_node_t * hashtable_list_func_del(hashtable_list_t * list, hashtable_node_key_t * key);
 extern void hashtable_list_func_push(hashtable_list_t * list, hashtable_node_t * node);
 extern void hashtable_list_func_replace(hashtable_list_t * list, hashtable_node_t * original, hashtable_node_t * node);
 
 #define hashtable_list_rem(collection)                          ((collection)->func->rem(collection))
 #define hashtable_list_get(collection, key)                     ((collection)->func->get(collection, key))
-#define hashtable_list_del(collection, node)                    ((collection)->func->del(collection, node))
+#define hashtable_list_del(collection, key)                     ((collection)->func->del(collection, key))
 #define hashtable_list_push(collection, node)                   ((collection)->func->push(collection, node))
 #define hashtable_list_replace(collection, original, node)      ((collection)->func->replace(collection, original, node))
 
@@ -154,7 +157,7 @@ struct hashtable_node_key {
 struct hashtable_node {
     hashtable_node_func_t * func;
     sync_t * sync;
-    hashtable_list_t * collection;
+    hashtable_list_t * list;
     hashtable_node_t * prev;
     hashtable_node_t * next;
     hashtable_node_key_t key;
@@ -162,11 +165,14 @@ struct hashtable_node {
 
 struct hashtable_node_func {
     hashtable_node_t * (*rem)(hashtable_node_t *);
+    hashtable_node_t * (*del)(hashtable_node_t *);
 };
 
 extern hashtable_node_t * hashtable_node_func_rem(hashtable_node_t * node);
+extern hashtable_node_t * hashtable_node_func_del(hashtable_node_t * node);
 
 #define hashtable_node_rem(node)                    ((node)->func->rem(node))
+#define hashtable_node_del(node)                    ((node)->func->del(node))
 
 #define hashtable_node_next(node)                   ((node)->next)
 

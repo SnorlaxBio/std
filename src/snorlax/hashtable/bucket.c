@@ -9,12 +9,13 @@ static hashtable_bucket_func_t func = {
     hashtable_bucket_func_move
 };
 
-extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent) {
+extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent, hashtable_t * collection) {
     hashtable_bucket_t * bucket = (hashtable_bucket_t *) calloc(1, sizeof(hashtable_bucket_t));
 
     bucket->func = address_of(func);
     bucket->exponent = exponent;
     bucket->container = (hashtable_list_t **) calloc(hashtable_bucket_size_cal(bucket), sizeof(hashtable_list_t *));
+    bucket->collection = collection;
 
     return bucket;
 }
@@ -68,7 +69,7 @@ extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket,
 
     hashtable_list_t * list = bucket->container[index];
 
-    if(list == nil) bucket->container[index] = (list = hashtable_list_gen());
+    if(list == nil) bucket->container[index] = (list = hashtable_list_gen(bucket));
 
     hashtable_node_t * found = hashtable_list_get(list, address_of(node->key));
 
@@ -76,16 +77,10 @@ extern hashtable_node_t * hashtable_bucket_func_set(hashtable_bucket_t * bucket,
 
     if(found) {
         hashtable_list_replace(list, found, node);
-        snorlaxdbg(false, true, "debug", "node => %p", node);
-        snorlaxdbg(false, true, "debug", "node->collection => %p", node->collection);
-        snorlaxdbg(false, true, "debug", "node->prev => %p", node->prev);
-        snorlaxdbg(false, true, "debug", "node->next => %p", node->next);
-        snorlaxdbg(false, true, "debug", "found => %p", found);
-        snorlaxdbg(false, true, "debug", "found->collection => %p", found->collection);
-        snorlaxdbg(false, true, "debug", "found->prev => %p", found->prev);
-        snorlaxdbg(false, true, "debug", "found->next => %p", found->next);
     } else {
         hashtable_list_push(list, node);
+
+        bucket->size = bucket->size + 1;
     }
     
     return found;
@@ -103,7 +98,7 @@ extern hashtable_node_t * hashtable_bucket_func_del(hashtable_bucket_t * bucket,
 
     hashtable_list_t * list = bucket->container[index];
 
-    if(list) node = hashtable_list_get(list, key);
+    if(list) node = hashtable_list_del(list, key);
 
     return node;
 }
@@ -117,7 +112,7 @@ extern hashtable_list_t * hashtable_bucket_func_list(hashtable_bucket_t * bucket
 
     hashtable_list_t * list = bucket->container[index];
 
-    if(list == nil && gen) bucket->container[index] = list = hashtable_list_gen();
+    if(list == nil && gen) bucket->container[index] = list = hashtable_list_gen(bucket);
 
     return list;
 }
@@ -135,10 +130,12 @@ extern uint32_t hashtable_bucket_func_move(hashtable_bucket_t * bucket, hashtabl
     while((list = back->container[index]) && threshold > 0) {
         hashtable_node_t * node = nil;
         while((node = hashtable_list_begin(list)) && threshold > 0) {
-            hashtable_list_del(list, node);
+            hashtable_node_del(node);
+
             hashtable_node_key_t * key = address_of(node->key);
             uint32_t v = hash(key->value, key->length);
-            hashtable_bucket_set(bucket, key, v, node);
+            hashtable_node_t * found = hashtable_bucket_set(bucket, key, v, node);
+
             threshold = threshold - 1;
         }
 

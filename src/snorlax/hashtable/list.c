@@ -11,10 +11,12 @@ static hashtable_list_func_t func = {
     hashtable_list_func_replace
 };
 
-extern hashtable_list_t * hashtable_list_gen(void) {
+extern hashtable_list_t * hashtable_list_gen(hashtable_bucket_t * bucket) {
     hashtable_list_t * list = (hashtable_list_t *) calloc(1, sizeof(hashtable_list_t));
 
     list->func = address_of(func);
+
+    list->bucket = bucket;
 
     return list;
 }
@@ -26,7 +28,7 @@ extern hashtable_list_t * hashtable_list_func_rem(hashtable_list_t * list) {
 
     hashtable_node_t * node = nil;
 
-    while(node = list->head) hashtable_list_del(list, node);
+    while(node = list->head) hashtable_node_del(node);
 
     list->sync = sync_rem(list->sync);
 
@@ -53,32 +55,17 @@ extern hashtable_node_t * hashtable_list_func_get(hashtable_list_t * list, hasht
     return node;
 }
 
-extern hashtable_node_t * hashtable_list_func_del(hashtable_list_t * list, hashtable_node_t * node) {
+extern hashtable_node_t * hashtable_list_func_del(hashtable_list_t * list, hashtable_node_key_t * key) {
 #ifndef   RELEASE
     snorlaxdbg(list == nil, false, "critical", "");
-    snorlaxdbg(node == nil, false, "critical", "");
-    snorlaxdbg(node->collection != list, false, "critical", "");
+    snorlaxdbg(key == nil, false, "critical", "");
 #endif // RELEASE
 
-    hashtable_node_t * prev = node->prev;
-    hashtable_node_t * next = node->next;
+    hashtable_node_t * node = hashtable_list_get(list, key);
 
-    if(prev) {
-        prev->next = next;
-        node->prev = nil;
-    } else {
-        list->head = next;
+    if(node) {
+        hashtable_node_del(node);
     }
-
-    if(next) {
-        next->prev = prev;
-        node->next = nil;
-    } else {
-        list->tail = prev;
-    }
-
-    node->collection = nil;
-    list->size = list->size - 1;
 
     return node;
 }
@@ -86,7 +73,7 @@ extern hashtable_node_t * hashtable_list_func_del(hashtable_list_t * list, hasht
 extern void hashtable_list_func_push(hashtable_list_t * list, hashtable_node_t * node) {
 #ifndef   RELEASE
     snorlaxdbg(list == nil, false, "critical", "");
-    snorlaxdbg(node->collection, false, "critical", "");
+    snorlaxdbg(node->list, false, "critical", "");
 #endif // RELEASE
 
     if(list->tail) {
@@ -97,8 +84,12 @@ extern void hashtable_list_func_push(hashtable_list_t * list, hashtable_node_t *
     }
 
     list->tail = node;
+
     list->size = list->size + 1;
-    node->collection = list;
+    list->bucket->size = list->bucket->size + 1;
+    list->bucket->collection->size = list->bucket->collection->size + 1;
+
+    node->list = list;
 }
 
 extern void hashtable_list_func_replace(hashtable_list_t * list, hashtable_node_t * original, hashtable_node_t * node) {
@@ -106,26 +97,26 @@ extern void hashtable_list_func_replace(hashtable_list_t * list, hashtable_node_
     snorlaxdbg(list == nil, false, "critical", "");
     snorlaxdbg(original == nil, false, "critical", "");
     snorlaxdbg(node == nil, false, "critical", "");
-    snorlaxdbg(original->collection != list, false, "critical", "%p = %p", original->collection, list);
+    snorlaxdbg(original->list != list, false, "critical", "%p = %p", original->list, list);
 #endif // RELEASE
 
     node->prev = original->prev;
     node->next = original->next;
-    node->collection = original->collection;
+    node->list = original->list;
 
     if(original->prev) {
         original->prev->next = node;
     } else {
-        original->collection->head = node;
+        original->list->head = node;
     }
 
     if(original->next) {
         original->next->prev = node;
     } else {
-        original->collection->tail = node;
+        original->list->tail = node;
     }
 
-    original->collection = nil;
+    original->list = nil;
     original->prev = nil;
     original->next = nil;
 }
