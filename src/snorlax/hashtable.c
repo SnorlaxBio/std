@@ -73,7 +73,7 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 
     uint64_t v = collection->hash(key->value, key->length);
 
-    hashtable_bucket_set(collection->front, key, v, node);
+    hashtable_node_t * found = hashtable_bucket_set(collection->front, key, v, node);
 
     collection->size = collection->front->size + (collection->back ? collection->back->size : 0);
 
@@ -83,7 +83,7 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 
     hashtable_shrink(collection);
 
-    return node;
+    return found;
 }
 
 extern hashtable_node_t * hashtable_func_del(hashtable_t * collection, hashtable_node_key_t * key) {
