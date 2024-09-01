@@ -33,6 +33,7 @@ typedef struct hashtable_node_func hashtable_node_func_t;
 typedef struct hashtable_node_key hashtable_node_key_t;
 
 typedef uint32_t (*hash_t)(const uint8_t * key, uint64_t n);
+typedef uint32_t (*hashtable_bucket_index_cal_func_t)(hashtable_bucket_t *, uint32_t);
 
 struct hashtable {
     hashtable_func_t * func;
@@ -43,6 +44,7 @@ struct hashtable {
     hash_t hash;
 
     uint64_t moved;
+    hashtable_bucket_index_cal_func_t index_cal;
 };
 
 struct hashtable_func {
@@ -54,7 +56,7 @@ struct hashtable_func {
     int32_t (*shrink)(hashtable_t *);
 };
 
-extern hashtable_t * hashtable_gen(hash_t hash);
+extern hashtable_t * hashtable_gen(hash_t hash, hashtable_bucket_index_cal_func_t index_cal);
 
 extern hashtable_t * hashtable_func_rem(hashtable_t * collection);
 extern hashtable_node_t * hashtable_func_get(hashtable_t * collection, hashtable_node_key_t * key);
@@ -75,8 +77,9 @@ extern int32_t hashtable_func_shrink(hashtable_t * collection);
 
 #define hashtable_bucket_size_cal(bucket)                   (1 << (bucket)->exponent)
 #define hashtable_bucket_size_mask_cal(bucket)              (hashtable_bucket_size_cal(bucket) - 1)
-#define hashtable_bucket_index_cal(bucket, v)               ((v) & hashtable_bucket_size_cal(bucket))
 #define hashtable_bucket_rehash_threshold_cal(bucket)       (hashtable_bucket_size_cal(bucket) * 2)
+
+
 
 struct hashtable_bucket {
     hashtable_bucket_func_t * func;
@@ -85,6 +88,8 @@ struct hashtable_bucket {
     uint8_t exponent;
     hashtable_list_t ** container;
     hashtable_t * collection;
+
+    hashtable_bucket_index_cal_func_t index_cal;
 };
 
 struct hashtable_bucket_func {
@@ -96,7 +101,7 @@ struct hashtable_bucket_func {
     uint32_t (*move)(hashtable_bucket_t *, hashtable_bucket_t *, uint64_t, hash_t, uint32_t);
 };
 
-extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent, hashtable_t * collection);
+extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent, hashtable_t * collection, hashtable_bucket_index_cal_func_t index_cal);
 
 extern hashtable_bucket_t * hashtable_bucket_func_rem(hashtable_bucket_t * bucket);
 extern hashtable_node_t * hashtable_bucket_func_get(hashtable_bucket_t * bucket, hashtable_node_key_t * key, uint32_t v);
@@ -105,12 +110,16 @@ extern hashtable_node_t * hashtable_bucket_func_del(hashtable_bucket_t * bucket,
 extern hashtable_list_t * hashtable_bucket_func_list(hashtable_bucket_t * bucket, uint32_t v, int32_t gen);
 extern uint32_t hashtable_bucket_func_move(hashtable_bucket_t * bucket, hashtable_bucket_t * back, uint64_t threshold, hash_t hash, uint32_t last);
 
+extern uint32_t hashtable_bucket_func_index_cal(hashtable_bucket_t * bucket, uint32_t v);
+
 #define hashtable_bucket_rem(bucket)                                    ((bucket)->func->rem(bucket))
 #define hashtable_bucket_get(bucket, key, v)                            ((bucket)->func->get(bucket, key, v))
 #define hashtable_bucket_set(bucket, key, v, node)                      ((bucket)->func->set(bucket, key, v, node))
 #define hashtable_bucket_del(bucket, key, v)                            ((bucket)->func->del(bucket, key, v))
 #define hashtable_bucket_list(bucket, v, gen)                           ((bucket)->func->list(bucket, v, gen))
 #define hashtable_bucket_move(bucket, back, threshold, hash, last)      ((bucket)->func->move(bucket, back, threshold, hash, last))
+
+#define hashtable_bucket_index_cal(bucket, v)                           ((bucket)->index_cal(bucket, v))
 
 #define hashtable_bucket_size_get(bucket)                               ((bucket)->size)
 #define hashtable_bucket_exponent_get(bucket)                           ((bucket)->exponent)
