@@ -92,7 +92,7 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 
     hashtable_shrink(collection);
 
-    return nil;
+    return found;
 }
 
 extern hashtable_node_t * hashtable_func_del(hashtable_t * collection, hashtable_node_key_t * key) {
