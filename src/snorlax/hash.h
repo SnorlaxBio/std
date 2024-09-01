@@ -11,7 +11,10 @@
 #define   __SNORLAX__HASH__H__
 
 #include <snorlax/hash/jenkins.h>
+#include <snorlax/hash/spooky.h>
 
-#define default_hash            jenkins_hash
+#define default_hash            spooky_hash64
+#define default_hash32          jenkins_hash
+#define default_hash64          spooky_hash64
 
 #endif // __SNORLAX__HASH__H__
