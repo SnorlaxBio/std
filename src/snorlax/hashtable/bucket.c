@@ -9,14 +9,13 @@ static hashtable_bucket_func_t func = {
     hashtable_bucket_func_move
 };
 
-extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent, hashtable_t * collection, hashtable_bucket_index_cal_func_t index_cal) {
+extern hashtable_bucket_t * hashtable_bucket_gen(uint8_t exponent, hashtable_t * collection) {
     hashtable_bucket_t * bucket = (hashtable_bucket_t *) calloc(1, sizeof(hashtable_bucket_t));
 
     bucket->func = address_of(func);
     bucket->exponent = exponent;
     bucket->container = (hashtable_list_t **) calloc(hashtable_bucket_size_cal(bucket), sizeof(hashtable_list_t *));
     bucket->collection = collection;
-    bucket->index_cal = index_cal ? index_cal : hashtable_bucket_func_index_cal;
 
     return bucket;
 }
@@ -147,8 +146,4 @@ extern uint64_t hashtable_bucket_func_move(hashtable_bucket_t * bucket, hashtabl
     }
 
     return index;
-}
-
-extern uint64_t hashtable_bucket_func_index_cal(hashtable_bucket_t * bucket, uint64_t v) {
-    return v & hashtable_bucket_size_cal(bucket);
 }

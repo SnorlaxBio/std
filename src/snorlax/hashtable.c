@@ -11,7 +11,7 @@ static hashtable_func_t func = {
     hashtable_func_shrink
 };
 
-extern hashtable_t * hashtable_gen(hash_t hash, hashtable_bucket_index_cal_func_t index_cal) {
+extern hashtable_t * hashtable_gen(hash_t hash) {
 #ifndef   RELEASE
     snorlaxdbg(hash == nil, false, "critical", "");
 #endif // RELEASE
@@ -20,9 +20,8 @@ extern hashtable_t * hashtable_gen(hash_t hash, hashtable_bucket_index_cal_func_
 
     collection->func = address_of(func);
     collection->hash = hash;
-    collection->index_cal = index_cal;
 
-    collection->front = hashtable_bucket_gen(hashtable_bucket_exponent_initial, collection, collection->index_cal);
+    collection->front = hashtable_bucket_gen(hashtable_bucket_exponent_initial, collection);
 
     return collection;
 }
@@ -125,7 +124,7 @@ extern int32_t hashtable_func_expand(hashtable_t * collection) {
     if(collection->back == nil) {
         collection->back = collection->front;
 
-        collection->front = hashtable_bucket_gen((collection->front->exponent = collection->front->exponent + 1), collection, collection->index_cal);
+        collection->front = hashtable_bucket_gen((collection->front->exponent = collection->front->exponent + 1), collection);
 
         hashtable_shrink(collection);
 
