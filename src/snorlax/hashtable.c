@@ -124,7 +124,7 @@ extern int32_t hashtable_func_expand(hashtable_t * collection) {
     if(collection->back == nil) {
         collection->back = collection->front;
 
-        collection->front = hashtable_bucket_gen((collection->front->exponent = collection->front->exponent + 1), collection);
+        collection->front = hashtable_bucket_gen(collection->front->exponent + 1, collection);
 
         hashtable_shrink(collection);
 
