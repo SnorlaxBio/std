@@ -73,8 +73,6 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 
     hashtable_node_key_t * key = address_of(node->key);
 
-    uint64_t v = collection->hash(key->value, key->length);
-
     hashtable_node_t * found = hashtable_get(collection, key);
 
     if(found) {
@@ -82,6 +80,8 @@ extern hashtable_node_t * hashtable_func_set(hashtable_t * collection, hashtable
 
         return found;
     }
+
+    uint64_t v = collection->hash(key->value, key->length);
     
     found = hashtable_bucket_set(collection->front, key, v, node);
 
